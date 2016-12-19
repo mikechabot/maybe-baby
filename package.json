@@ -1,0 +1,32 @@
+{
+  "name": "maybe-baby",
+  "version": "0.0.1",
+  "description": "Maybe monad for JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikechabot/maybe-baby.git"
+  },
+  "keywords": [
+    "maybe",
+    "monad",
+    "javascript"
+  ],
+  "author": "Mike Chabot",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mikechabot/maybe-baby/issues"
+  },
+  "homepage": "https://github.com/mikechabot/maybe-baby#readme",
+  "devDependencies": {
+    "eslint": "^3.10.2",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1"
+  },
+  "tonicExampleFilename": "example.js"
+}
