@@ -1,6 +1,6 @@
 'use strict';
 
-const Maybe = require('./index');
+const Maybe = require('maybe-baby');
 
 function prop (value) {
     return function (monad) {
