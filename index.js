@@ -30,20 +30,19 @@ Maybe.prototype.chain = function (transform) {
     return this.map(transform).join();
 };
 
-Maybe.prototype.prop = function (value) {
-    function getProp (value) {
-        return function (monad) {
-            return monad[value];
-        };
-    }
-    return this.map(getProp(value));
+Maybe.prototype.prop = function (property) {
+    return this.map(
+        function (value) {
+            return value[property];
+        }
+    );
 };
 
 Maybe.prototype.map = function (transform) {
     if (this.isNothing()) {
         return Maybe.of(null);
     }
-    return Maybe.of(transform(this.__value));
+    return Maybe.of(transform(this.join()));
 };
 
 Maybe.prototype.orElse = function (defaultVal) {
