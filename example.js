@@ -2,26 +2,20 @@
 
 const Maybe = require('maybe-baby');
 
-function prop (value) {
-    return function (monad) {
-        return monad[value];
-    };
-}
-
 const maybeName = Maybe.of({ foo: { baz: '123' } });
 
 console.log(
     maybeName
-        .map(prop('foo'))
-        .map(prop('baz'))
+        .prop('foo')
+        .prop('baz')
         .join()
 );
 
 console.log(
     maybeName
-        .map(prop('foo'))
-        .map(prop('baz'))
-        .map(prop('bar'))
+        .prop('foo')
+        .prop('baz')
+        .prop('bar')
         .orElse('No Bar!')
         .join()
 );
