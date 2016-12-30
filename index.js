@@ -30,6 +30,15 @@ Maybe.prototype.chain = function (transform) {
     return this.map(transform).join();
 };
 
+Maybe.prototype.prop = function (value) {
+    function getProp (value) {
+        return function (monad) {
+            return monad[value];
+        };
+    }
+    return this.map(getProp(value));
+};
+
 Maybe.prototype.map = function (transform) {
     if (this.isNothing()) {
         return Maybe.of(null);
@@ -45,3 +54,4 @@ Maybe.prototype.orElse = function (defaultVal) {
 };
 
 module.exports = Maybe;
+
