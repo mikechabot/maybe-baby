@@ -6,7 +6,7 @@ Maybe monad for JavaScript
 
 **Monad**
 
-    const Maybe = function (val) {
+    var Maybe = function (val) {
         this.__value = val;
     };
 
