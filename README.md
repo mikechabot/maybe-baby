@@ -1,4 +1,7 @@
 # maybe-baby
+
+[![npm version](https://badge.fury.io/js/maybe-baby.svg)](https://badge.fury.io/js/maybe-baby)
+
 Maybe monad for JavaScript
 
 * Credit to [James Sinclair](https://github.com/jrsinclair)
