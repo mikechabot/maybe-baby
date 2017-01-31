@@ -6,7 +6,7 @@
  * http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/
  */
 
-const Maybe = function (val) {
+var Maybe = function (val) {
     this.__value = val;
 };
 
