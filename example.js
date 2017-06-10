@@ -2,7 +2,14 @@
 
 const Maybe = require('maybe-baby');
 
-const maybeName = Maybe.of({ foo: { baz: '123' } });
+const maybeName = Maybe.of({
+    foo: {
+        bar: {
+            qux: 456
+        },
+        baz: '123'
+    }
+});
 
 console.log(
     maybeName
@@ -10,6 +17,10 @@ console.log(
         .prop('baz')
         .join()
 );
+
+console.log(
+    maybeName.props('foo', 'bar', 'qux').join())
+;
 
 console.log(
     maybeName
