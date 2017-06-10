@@ -1,6 +1,6 @@
 {
   "name": "maybe-baby",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Maybe monad for JavaScript",
   "main": "index.js",
   "scripts": {
