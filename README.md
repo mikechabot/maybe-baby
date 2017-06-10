@@ -8,7 +8,7 @@ Maybe monad for JavaScript
 * [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/)
 
 **Monad**
-
+    
     var Maybe = function (val) {
         this.__value = val;
     };
@@ -33,11 +33,19 @@ Maybe monad for JavaScript
         return this.map(transform).join();
     };
 
+    Maybe.prototype.prop = function (property) {
+        return this.map(
+            function (value) {
+                return value[property];
+            }
+        );
+    };
+
     Maybe.prototype.map = function (transform) {
         if (this.isNothing()) {
             return Maybe.of(null);
         }
-        return Maybe.of(transform(this.__value));
+        return Maybe.of(transform(this.join()));
     };
 
     Maybe.prototype.orElse = function (defaultVal) {
