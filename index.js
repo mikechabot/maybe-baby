@@ -6,7 +6,7 @@
  * http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/
  */
 
-var Maybe = function (val) {
+var Maybe = function Maybe(val) {
     this.__value = val;
 };
 
@@ -24,7 +24,7 @@ Maybe.of = function (val) {
  * @returns {boolean}
  */
 Maybe.prototype.isNothing = function () {
-    return (this.__value === null || this.__value === undefined);
+    return this.__value === null || this.__value === undefined;
 };
 
 /**
@@ -57,19 +57,19 @@ Maybe.prototype.chain = function (transform) {
  * @param property
  */
 Maybe.prototype.prop = function (property) {
-    return this.map(
-        function (value) {
-            return value[property];
-        }
-    );
+    return this.map(function (value) {
+        return value[property];
+    });
 };
 
-Maybe.prototype.props = function (...properties) {
+Maybe.prototype.props = function () {
+    for (var _len = arguments.length, properties = Array(_len), _key = 0; _key < _len; _key++) {
+        properties[_key] = arguments[_key];
+    }
+
     if (properties) {
-        const maybeValue = this.prop(properties.shift());
-        return properties.length > 0
-            ? maybeValue.props(...properties)
-            : maybeValue;
+        var maybeValue = this.prop(properties.shift());
+        return properties.length > 0 ? maybeValue.props.apply(maybeValue, properties) : maybeValue;
     }
 };
 
@@ -97,4 +97,3 @@ Maybe.prototype.orElse = function (defaultVal) {
 };
 
 module.exports = Maybe;
-
