@@ -1,3 +1,5 @@
+'use strict';
+
 const expect = require('chai').expect;
 const Maybe = require('../../src');
 const TEST_TYPES = require('../common/test-const').TEST_TYPES;

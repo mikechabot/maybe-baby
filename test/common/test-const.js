@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     TEST_TYPES: [
         { label: 'null', value: null },
