@@ -5,23 +5,30 @@ const Maybe = require('../../lib');
 const TEST_TYPES = require('../common/test-const').TEST_TYPES;
 
 describe('maybe-baby', () => {
-    describe('prototype', () => {
+    describe('Prototype', () => {
         let testMaybe;
         beforeEach(() => {
             testMaybe = Maybe.of();
         });
-        it('should have an isJust function', () => { expect(testMaybe.isJust).to.be.a('function'); });
-        it('should have an isNothing function', () => { expect(testMaybe.isNothing).to.be.a('function'); });
-        it('should have a join function', () => { expect(testMaybe.join).to.be.a('function'); });
-        it('should have an orElse function', () => { expect(testMaybe.orElse).to.be.a('function'); });
-        it('should have a map function', () => { expect(testMaybe.map).to.be.a('function'); });
-        it('should have a path function', () => { expect(testMaybe.path).to.be.a('function'); });
-        it('should have a prop function', () => { expect(testMaybe.prop).to.be.a('function'); });
-        it('should have a props function', () => { expect(testMaybe.props).to.be.a('function'); });
-        it('should have a private __value property', () => { expect(testMaybe).to.have.property('__value'); });
-        it('should have a private __isValidPath function', () => { expect(testMaybe.__isValidPath).to.be.a('function'); });
+        describe('Public API', () => {
+            it('should have an isJust function', () => { expect(testMaybe.isJust).to.be.a('function'); });
+            it('should have an isNothing function', () => { expect(testMaybe.isNothing).to.be.a('function'); });
+            it('should have a join function', () => { expect(testMaybe.join).to.be.a('function'); });
+            it('should have an orElse function', () => { expect(testMaybe.orElse).to.be.a('function'); });
+            it('should have a map function', () => { expect(testMaybe.map).to.be.a('function'); });
+            it('should have a path function', () => { expect(testMaybe.path).to.be.a('function'); });
+            it('should have a prop function', () => { expect(testMaybe.prop).to.be.a('function'); });
+            it('should have a props function', () => { expect(testMaybe.props).to.be.a('function'); });
+        });
+        describe('Private', () => {
+            it('should have a private __value property', () => { expect(testMaybe).to.have.property('__value'); });
+            it('should have a private __isValidPath function', () => { expect(testMaybe.__isValidPath).to.be.a('function'); });
+        });
     });
-    describe('Maybe.of(<value>) (factory)', () => {
+    describe('Maybe.of(<value>)', () => {
+        it('should be a function', () => {
+            expect(Maybe.of).to.be.a('function');
+        });
         TEST_TYPES.forEach(testType => {
             it(`should return valid monad when passed ${testType.label}`, () => {
                 const testMaybe = Maybe.of(testType.value);
@@ -82,19 +89,27 @@ describe('maybe-baby', () => {
                 });
             });
             describe('orElse(<value>)', () => {
-                it('should return this value when join() is called, if isNothing() is true', () => {
+                it('should return this value as the default if isNothing() is true', () => {
                     const OR_ELSE_VALUE = 'foo';
                     NULL_UNDEFINED_VALUES.forEach(testValue => {
                         const testMaybe = Maybe.of(testValue).orElse(OR_ELSE_VALUE);
                         expect(testMaybe.join()).to.equal(OR_ELSE_VALUE);
                     });
                 });
-                it('should not return this value when join() is called, if isNothing() is true', () => {
+                it('should not return this value if isNothing() is false', () => {
                     const OR_ELSE_VALUE = 'foo';
                     VALID_TEST_VALUES.forEach(testValue => {
                         const testMaybe = Maybe.of(testValue).orElse(OR_ELSE_VALUE);
                         expect(testMaybe.join()).to.equal(testValue);
                     });
+                });
+                it('should return undefined (no value was passed) if isNothing() is true', () => {
+                    const testMaybe = Maybe.of().orElse();
+                    expect(testMaybe.join()).to.equal(undefined);
+                });
+                it('should not return undefined if isNothing() is false', () => {
+                    const testMaybe = Maybe.of(123).orElse();
+                    expect(testMaybe.join()).to.not.equal(undefined);
                 });
             });
         });
@@ -138,6 +153,14 @@ describe('maybe-baby', () => {
                     const maybeObj = Maybe.of(TEST_OBJECT);
                     expect(maybeObj.prop().join()).to.be.undefined;
                 });
+                it('should return an empty monad if null/undefined is passed', () => {
+                    const testObject = Maybe.of({[TEST_PROPERTY]: { bar: 'baz' }});
+                    [null, undefined].forEach(invalid => {
+                        expect(testObject.prop(TEST_PROPERTY).isNothing()).to.be.false;
+                        expect(testObject.prop(invalid).isNothing()).to.be.true;
+                        expect(testObject.prop(invalid).join()).to.be.undefined;
+                    });
+                });
             });
             describe('props(...properties)', () => {
                 it('should return a monad by using the argument list as keys / array indexes (object)', () => {
@@ -164,6 +187,12 @@ describe('maybe-baby', () => {
                 it('should return an empty monad if the argument list is empty', () => {
                     const maybeObj = Maybe.of(TEST_OBJECT);
                     expect(maybeObj.props().join()).to.be.undefined;
+                });
+                it('should return an empty monad if null/undefined is passed', () => {
+                    const testObject = Maybe.of({[TEST_PROPERTY]: { bar: 'baz' }});
+                    expect(testObject.props(TEST_PROPERTY).isNothing()).to.be.false;
+                    expect(testObject.props(TEST_PROPERTY, null, undefined).isNothing()).to.be.true;
+                    expect(testObject.props(TEST_PROPERTY, null, undefined).join()).to.be.undefined;
                 });
             });
             describe('path(<string>)', () => {
@@ -194,6 +223,13 @@ describe('maybe-baby', () => {
                 it('should return an empty monad if the path is not a string', () => {
                     const maybeObj = Maybe.of(['foo', 'bar']);
                     expect(maybeObj.path(1).join()).to.be.undefined;
+                });
+                it('should return an empty monad if null/undefined is passed', () => {
+                    const testObject = Maybe.of({[TEST_PROPERTY]: { bar: 'baz' }});
+                    [null, undefined].forEach(invalid => {
+                        expect(testObject.path(invalid).isNothing()).to.be.true;
+                        expect(testObject.path(invalid).join()).to.be.undefined;
+                    });
                 });
             });
         });
