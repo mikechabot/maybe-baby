@@ -7,7 +7,7 @@ const DELIMITER = '.';
  * @param val
  * @constructor
  */
-let Maybe = function Maybe (val) {
+const Maybe = function Maybe (val) {
     this.__value = val;
 };
 
