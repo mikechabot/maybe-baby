@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run clear && npm run compile",
-    "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec",
     "compile": "babel src -d lib",
     "clear": "rm -rf ./lib"
   },
@@ -28,6 +29,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.2",
+    "coveralls": "^2.13.1",
     "eslint": "^3.10.2",
     "eslint-config-standard": "^6.2.1",
     "eslint-loader": "^1.6.1",
