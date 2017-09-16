@@ -234,4 +234,134 @@ describe('maybe-baby', () => {
             });
         });
     });
+    describe('Common Scenarios', () => {
+        describe('Person 1', () => {
+            let person1;
+            let person1Maybe;
+            beforeEach(() => {
+                person1 = { firstName: 'Person', address: null };
+                person1Maybe = Maybe.of(person1);
+            });
+            it('should return a monad containing the person object', () => {
+                expect(person1Maybe.isJust).to.exist;
+                expect(person1Maybe.isJust()).to.be.true;
+                expect(person1Maybe.join()).to.equal(person1);
+            });
+            it('should return a monad with a value when searching for first name', () => {
+                expect(person1Maybe.path('firstName').isNothing()).to.equal(false);
+                expect(person1Maybe.props('firstName').isNothing()).to.equal(false);
+                expect(person1Maybe.prop('firstName').isNothing()).to.equal(false);
+            });
+            it('should return a monad with an undefined value when searching for address', () => {
+                expect(person1Maybe.path('address').isNothing()).to.equal(true);
+                expect(person1Maybe.props('address').isNothing()).to.equal(true);
+                expect(person1Maybe.prop('address').isNothing()).to.equal(true);
+            });
+            it('should return a monad with an undefined value when searching for street address', () => {
+                expect(person1Maybe.path('address.street').isNothing()).to.equal(true);
+                expect(person1Maybe.props('address', 'street').isNothing()).to.equal(true);
+                expect(person1Maybe.prop('address').prop('street').isNothing()).to.equal(true);
+            });
+            it('should return the orElse value when searching for street address', () => {
+                const OR_ELSE_VALUE = 'No Address';
+                expect(person1Maybe.path('address.street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
+                expect(person1Maybe.props('address', 'street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
+                expect(person1Maybe.prop('address').prop('street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
+            });
+        });
+        describe('Person 2', () => {
+            let person2;
+            let person2Maybe;
+            beforeEach(() => {
+                // More data, empty address
+                person2 = { firstName: 'Person', lastName: 'Two', address: {} };
+                person2Maybe = Maybe.of(person2);
+            });
+            it('should return a monad containing the person object', () => {
+                expect(person2Maybe.isJust).to.exist;
+                expect(person2Maybe.isJust()).to.be.true;
+                expect(person2Maybe.join()).to.equal(person2);
+            });
+            it('should return a monad with a value when searching for first name', () => {
+                expect(person2Maybe.path('firstName').isNothing()).to.equal(false);
+                expect(person2Maybe.props('firstName').isNothing()).to.equal(false);
+                expect(person2Maybe.prop('firstName').isNothing()).to.equal(false);
+            });
+            it('should return a monad with a value when searching for address', () => {
+                // path check
+                expect(person2Maybe.path('address').isNothing()).to.equal(false);
+                expect(person2Maybe.path('address').join()).to.equal(person2.address);
+
+                // props check
+                expect(person2Maybe.props('address').isNothing()).to.equal(false);
+                expect(person2Maybe.props('address').join()).to.equal(person2.address);
+
+                // prop check
+                expect(person2Maybe.prop('address').isNothing()).to.equal(false);
+                expect(person2Maybe.prop('address').join()).to.equal(person2.address);
+            });
+            it('should return a monad with an undefined value searching for street address', () => {
+                expect(person2Maybe.path('address.street').isNothing()).to.equal(true);
+                expect(person2Maybe.props('address', 'street').isNothing()).to.equal(true);
+                expect(person2Maybe.prop('address').prop('street').isNothing()).to.equal(true);
+            });
+            it('should return the orElse value when searching for street address', () => {
+                const OR_ELSE_VALUE = 'No Address';
+                expect(person2Maybe.path('address.street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
+                expect(person2Maybe.props('address', 'street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
+                expect(person2Maybe.prop('address').prop('street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
+            });
+        });
+        describe('Person 3', () => {
+            let person3;
+            let person3Maybe;
+            beforeEach(() => {
+                // Lots of data
+                person3 = {
+                    firstName: 'Person',
+                    lastName : 'Three',
+                    address  : {
+                        street: '123 Main St',
+                        state : 'OR',
+                        zip   : '12345'
+                    }
+                };
+                person3Maybe = Maybe.of(person3);
+            });
+            it('should return a monad containing the person object', () => {
+                expect(person3Maybe.isJust).to.exist;
+                expect(person3Maybe.isJust()).to.be.true;
+                expect(person3Maybe.join()).to.equal(person3);
+            });
+            it('should return a monad with a value when searching for first name', () => {
+                expect(person3Maybe.path('firstName').isNothing()).to.equal(false);
+                expect(person3Maybe.props('firstName').isNothing()).to.equal(false);
+                expect(person3Maybe.prop('firstName').isNothing()).to.equal(false);
+            });
+            it('should return a monad with a value when searching for address', () => {
+                expect(person3Maybe.path('address').isNothing()).to.equal(false);
+                expect(person3Maybe.props('address').isNothing()).to.equal(false);
+                expect(person3Maybe.prop('address').isNothing()).to.equal(false);
+            });
+            it('should return a monad with an value searching for street address', () => {
+                // path check
+                expect(person3Maybe.path('address.street').isNothing()).to.equal(false);
+                expect(person3Maybe.path('address.street').join()).to.equal(person3.address.street);
+
+                // props check
+                expect(person3Maybe.props('address', 'street').isNothing()).to.equal(false);
+                expect(person3Maybe.props('address', 'street').join()).to.equal(person3.address.street);
+
+                // prop check
+                expect(person3Maybe.prop('address').prop('street').isNothing()).to.equal(false);
+                expect(person3Maybe.prop('address').prop('street').join()).to.equal(person3.address.street);
+            });
+            it('should not return the orElse value when searching for street address', () => {
+                const OR_ELSE_VALUE = 'No Address';
+                expect(person3Maybe.path('address.street').orElse(OR_ELSE_VALUE).join()).to.not.equal(OR_ELSE_VALUE);
+                expect(person3Maybe.props('address', 'street').orElse(OR_ELSE_VALUE).join()).to.not.equal(OR_ELSE_VALUE);
+                expect(person3Maybe.prop('address').prop('street').orElse(OR_ELSE_VALUE).join()).to.not.equal(OR_ELSE_VALUE);
+            });
+        });
+    });
 });
