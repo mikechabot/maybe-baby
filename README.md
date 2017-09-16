@@ -33,10 +33,6 @@ Maybe monad for JavaScript
         return this.__value;
     };
 
-    Maybe.prototype.chain = function (transform) {
-        return this.map(transform).join();
-    };
-
     Maybe.prototype.prop = function (property) {
         return this.map(
             function (value) {
