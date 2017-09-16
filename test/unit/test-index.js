@@ -8,7 +8,6 @@ describe('maybe-baby', () => {
         beforeEach(() => {
             testMaybe = Maybe.of();
         });
-        it('should have a __value property', () => { expect(testMaybe).to.have.property('__value'); });
         it('should have an isJust function', () => { expect(testMaybe.isJust).to.be.a('function'); });
         it('should have an isNothing function', () => { expect(testMaybe.isNothing).to.be.a('function'); });
         it('should have a join function', () => { expect(testMaybe.join).to.be.a('function'); });
@@ -17,6 +16,8 @@ describe('maybe-baby', () => {
         it('should have a path function', () => { expect(testMaybe.path).to.be.a('function'); });
         it('should have a prop function', () => { expect(testMaybe.prop).to.be.a('function'); });
         it('should have a props function', () => { expect(testMaybe.props).to.be.a('function'); });
+        it('should have a private __value property', () => { expect(testMaybe).to.have.property('__value'); });
+        it('should have a private __isValidPath function', () => { expect(testMaybe.__isValidPath).to.be.a('function'); });
     });
     describe('Maybe.of(<value>) (factory)', () => {
         TEST_TYPES.forEach(testType => {
@@ -163,7 +164,7 @@ describe('maybe-baby', () => {
                     expect(maybeObj.props().join()).to.be.undefined;
                 });
             });
-            describe('path(<path>)', () => {
+            describe('path(<string>)', () => {
                 it('should return a monad by parsing the path (object)', () => {
                     const maybeObj = Maybe.of(TEST_OBJECT);
                     expect(maybeObj.path(TEST_PROPERTY).join()).to.equal(TEST_VALUE);
@@ -187,6 +188,10 @@ describe('maybe-baby', () => {
                 it('should return an empty monad if the path is empty', () => {
                     const maybeObj = Maybe.of(TEST_OBJECT);
                     expect(maybeObj.path().join()).to.be.undefined;
+                });
+                it('should return an empty monad if the path is not a string', () => {
+                    const maybeObj = Maybe.of(['foo', 'bar']);
+                    expect(maybeObj.path(1).join()).to.be.undefined;
                 });
             });
         });

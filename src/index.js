@@ -91,9 +91,9 @@ Maybe.prototype.props = function (...properties) {
  * @returns {*}
  */
 Maybe.prototype.path = function (path) {
-    return path === null || path === undefined
-        ? Maybe.of(undefined)
-        : this.props(...path.split(DELIMITER));
+    return this.__isValidPath(path)
+        ? this.props(...path.split(DELIMITER))
+        : Maybe.of(undefined);
 };
 
 /**
@@ -106,6 +106,11 @@ Maybe.prototype.map = function (transform) {
         return Maybe.of(undefined);
     }
     return Maybe.of(transform(this.join()));
+};
+
+Maybe.prototype.__isValidPath = function (path) {
+    if (path === null || path === undefined) return false;
+    return typeof path === 'string' && path.length > 0;
 };
 
 module.exports = Maybe;
