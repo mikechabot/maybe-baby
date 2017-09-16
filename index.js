@@ -1,99 +1,28 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2017 Mike Chabot
+ *
+ *Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ *to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 'use strict';
 
-/**
- * maybe-baby: Maybe monad for JavaScript
- * Credit to James Sinclair (https://twitter.com/jrsinclair)
- * http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/
- */
-
-var Maybe = function Maybe(val) {
-    this.__value = val;
-};
-
-/**
- * Create a Maybe instance
- * @param val
- * @returns {Maybe}
- */
-Maybe.of = function (val) {
-    return new Maybe(val);
-};
-
-/**
- * Return true if the Maybe does not contain a value
- * @returns {boolean}
- */
-Maybe.prototype.isNothing = function () {
-    return this.__value === null || this.__value === undefined;
-};
-
-/**
- * Return true if the Maybe contains a value
- * @returns {boolean}
- */
-Maybe.prototype.isJust = function () {
-    return !this.isNothing();
-};
-
-/**
- * Get the Maybe's value
- * @returns {*}
- */
-Maybe.prototype.join = function () {
-    return this.__value;
-};
-
-/**
- * Chain together functions that return Maybes
- * @param transform
- * @returns {string}
- */
-Maybe.prototype.chain = function (transform) {
-    return this.map(transform).join();
-};
-
-/**
- * Get a property value from a Maybe
- * @param property
- */
-Maybe.prototype.prop = function (property) {
-    return this.map(function (value) {
-        return value[property];
-    });
-};
-
-Maybe.prototype.props = function () {
-    for (var _len = arguments.length, properties = Array(_len), _key = 0; _key < _len; _key++) {
-        properties[_key] = arguments[_key];
-    }
-
-    if (properties) {
-        var maybeValue = this.prop(properties.shift());
-        return properties.length > 0 ? maybeValue.props.apply(maybeValue, properties) : maybeValue;
-    }
-};
-
-/**
- * Perform a transformation on a Maybe value
- * @param transform
- */
-Maybe.prototype.map = function (transform) {
-    if (this.isNothing()) {
-        return Maybe.of(null);
-    }
-    return Maybe.of(transform(this.join()));
-};
-
-/**
- * Return a default value if the Maybe is nothing
- * @param defaultVal
- * @returns {Maybe}
- */
-Maybe.prototype.orElse = function (defaultVal) {
-    if (this.isNothing()) {
-        return Maybe.of(defaultVal);
-    }
-    return this;
-};
-
-module.exports = Maybe;
+module.exports = require('./lib');
