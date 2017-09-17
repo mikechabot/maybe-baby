@@ -41,26 +41,33 @@ someVal.isJust();       // true
 ```
 #### Use `path`, `props`, or `prop` to get values at arbitrary depths
 
+These functions serve the same ultimate purpose: to return a monad of the value at the specified path/location, however they each do it a bit differently. Keep in mind, these functions are chainable.
+
+| Function | Description | Example 
+| ----- | ---- | ----------- |
+| `path(<string>)` | Period-delimited string path | `path('foo.bar.1')` |
+| `props(...properties)` | Takes an indefinite list of arguments | `props('foo', 'bar', 1')` |
+| `prop(<string\|number>)` | Takes a single argument | `prop('foo').prop('bar').prop(1)` |
+
 ```javascript
 const deepObj = { foo: { bar: [123,456] } };
 
 const deepVal = Maybe.of(deepObj);
-
-// Path function
-deepVal.path('foo').join();        // { bar: [123,456] }
-deepVal.path('foo.bar').join();    // [123,456]
-deepVal.path('foo.bar.1').join();  // 456
-
-// Props function
-deepVal.props('foo').join();            // { bar: [123,456] }
-deepVal.props('foo', 'bar').join();     // [123,456]
-deepVal.props('foo', 'bar', 1).join();  // 456
 
 // Prop function
 deepVal.prop('foo').join();                       // { bar: [123,456] }
 deepVal.prop('foo').prop('bar').join();           // [123,456]
 deepVal.prop('foo').prop('bar').prop(1).join();   // 456
 
+// Path function
+deepVal.path('foo').join();                       // { bar: [123,456] }
+deepVal.path('foo.bar').join();                   // [123,456]
+deepVal.path('foo.bar.1').join();                 // 456
+
+// Props function
+deepVal.props('foo').join();                      // { bar: [123,456] }
+deepVal.props('foo', 'bar').join();               // [123,456]
+deepVal.props('foo', 'bar', 1).join();            // 456
 ```
 
 ### Installation
