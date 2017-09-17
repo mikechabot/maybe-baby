@@ -23,8 +23,10 @@ const personObj = {
   details: null 
  };
 
+// Create the monad
 const person = Maybe.of(personObj);
 
+// Attempt to access properties
 const fName = person.path('name.first').orElse('N/A').join();             // 'John'
 const lName = person.path('name.last').orElse('N/A').join();              // 'N/A'
 const state = person.path('details.address.state').orElse('N/A').join();  // 'N/A'
