@@ -15,6 +15,8 @@
 When data is unreliable, minimize defensive coding with `maybe-baby`:
 
 ```javascript
+import Maybe from 'maybe-baby';
+
 // Missing last name and details
 const personObj = { 
   name: {  first: 'John', last: null }, 
