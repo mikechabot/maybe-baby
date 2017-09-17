@@ -10,19 +10,24 @@
 * `maybe-baby` is the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad) implemented in JavaScript. 
 * Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-read blogpost [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
-### Usage
+## Usage
 
-When data is unreliable, minimize defensive coding with `maybe-baby`:
+Minimize defensive coding with `maybe-baby` when data is unreliable:
 
 ```javascript
 import Maybe from 'maybe-baby';
 
 // Create the monad
-const foo = Maybe.of({ bar: 123 });
+const foo = Maybe.of({ bar: { baz: 123 } });
 
-// Retrieve values, but provide a default with "orElse"
-const fooVal = foo.path('bar').orElse('N/A').join();  // 123
-const barVal = foo.path('baz').orElse('N/A').join();  // 'N/A'
+if (foo.path('bar.baz').isJust()) {
+  // Will enter
+}
+
+if (foo.path('bar.bar').isJust()) {
+  // Will not enter
+}
+
 ```
 
 #### Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
@@ -70,7 +75,7 @@ deepVal.props('foo', 'bar').join();               // [123,456]
 deepVal.props('foo', 'bar', 1).join();            // 456
 ```
 
-### Installation
+## Installation
 
 Install with yarn or npm:
 
