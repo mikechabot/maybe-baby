@@ -17,10 +17,8 @@ When data is unreliable, minimize defensive coding with `maybe-baby`:
 ```javascript
 import Maybe from 'maybe-baby';
 
-const fooObj = { bar: 123 };
-
 // Create the monad
-const foo = Maybe.of(fooObj);
+const foo = Maybe.of({ bar: 123 });
 
 // Retrieve values, and use 'orElse' to supply a default value
 const fooVal = foo.path('bar').orElse('N/A').join();  // 123
