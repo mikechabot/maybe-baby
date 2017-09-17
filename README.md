@@ -10,13 +10,6 @@
 * `maybe-baby` is the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad) implemented in JavaScript. 
 * Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-read blogpost [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
-### Installation
-
-Install with yarn or npm:
-
-* `$ npm install --save maybe-baby`
-* `$ yarn add maybe-baby`
-
 ### Usage
 
 When data is unreliable, minimize defensive coding with `maybe-baby`:
@@ -76,3 +69,10 @@ deepVal.props('foo').join();                      // { bar: [123,456] }
 deepVal.props('foo', 'bar').join();               // [123,456]
 deepVal.props('foo', 'bar', 1).join();            // 456
 ```
+
+### Installation
+
+Install with yarn or npm:
+
+* `$ npm install --save maybe-baby`
+* `$ yarn add maybe-baby`
