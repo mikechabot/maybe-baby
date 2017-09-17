@@ -20,7 +20,7 @@ import Maybe from 'maybe-baby';
 // Create the monad
 const foo = Maybe.of({ bar: 123 });
 
-// Retrieve values, and use 'orElse' to supply a default value
+// Retrieve values, but provide a default with "orElse"
 const fooVal = foo.path('bar').orElse('N/A').join();  // 123
 const barVal = foo.path('baz').orElse('N/A').join();  // 'N/A'
 ```
