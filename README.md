@@ -26,7 +26,7 @@ const personObj = {
 // Create the monad
 const person = Maybe.of(personObj);
 
-// Attempt to access properties
+// Attempt to access properties. Use 'orElse' to supply a default value.
 const fName = person.path('name.first').orElse('N/A').join();             // 'John'
 const lName = person.path('name.last').orElse('N/A').join();              // 'N/A'
 const state = person.path('details.address.state').orElse('N/A').join();  // 'N/A'
@@ -39,6 +39,12 @@ const noVal = Maybe.of(null);
 noVal.join();         // null
 noVal.isNothing();    // true
 noVal.isJust();       // false
+
+const someVal = Maybe.of(123);
+
+someVal.join();         // 123
+someVal.isNothing();    // false
+someVal.isJust();       // true
 ```
 #### Use `path`, `props`, or `prop` to get values at arbitrary depths
 
