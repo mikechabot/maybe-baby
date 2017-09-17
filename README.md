@@ -17,14 +17,14 @@ When data is unreliable, minimize defensive coding with `maybe-baby`:
 ```javascript
 import Maybe from 'maybe-baby';
 
-const fooObj = { foo: 123 };
+const fooObj = { bar: 123 };
 
 // Create the monad
 const foo = Maybe.of(fooObj);
 
-// Retrieve properties, and use 'orElse' to supply a default value
-const fooVal = foo.path('foo').orElse('N/A').join();  // 123
-const barVal = foo.path('bar').orElse('N/A').join();  // 'N/A'
+// Retrieve values, and use 'orElse' to supply a default value
+const fooVal = foo.path('bar').orElse('N/A').join();  // 123
+const barVal = foo.path('baz').orElse('N/A').join();  // 'N/A'
 ```
 
 #### Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
