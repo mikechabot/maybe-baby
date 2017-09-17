@@ -70,7 +70,7 @@ deepVal.prop('foo').prop('bar').prop(1).join();   // 456
 
 ```
 
-#### Installation
+### Installation
 
 Install with yarn or npm:
 
