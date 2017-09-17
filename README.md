@@ -16,6 +16,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the blogpo
 When data is unreliable, minimize defensive coding with `maybe-baby`:
 
 ```javascript
+// Missing last name and details
 const personObj = { 
   name: {  first: 'John', last: null }, 
   details: null 
