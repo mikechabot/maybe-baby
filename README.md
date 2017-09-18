@@ -56,7 +56,7 @@ These functions serve the same ultimate purpose: to return a monad of the value 
 | `prop(<string\|number>)` | Takes a single argument | `prop('foo').prop('bar').prop(1)` |
 
 ```javascript
-const deepObj = { foo: { bar: [123,456] } };
+const deepObj = { foo: { bar: [123, 456] } };
 
 const deepVal = Maybe.of(deepObj);
 
