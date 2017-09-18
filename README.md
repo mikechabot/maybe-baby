@@ -17,16 +17,17 @@ Minimize defensive coding with `maybe-baby` when data is unreliable:
 ```javascript
 import Maybe from 'maybe-baby';
 
+// Arbitrary data
+const personObj = { firstName: 'John', lastName: 'Smith', address: null };
+
 // Create the monad
-const foo = Maybe.of({ bar: { baz: 123 } });
+const person = Maybe.of(personObj);
 
-if (foo.path('bar.baz').isJust()) {
-  // Will enter
-}
-
-if (foo.path('bar.bar').isJust()) {
-  // Will not enter
-}
+person.isJust()                         // true
+person.isNothing()                      // false
+person.join()                           // { firstName: 'John', lastName: 'Smith', address: null }
+person.prop('address').isNothing();     // true
+person.prop('firstName').isNothing();   // false   
 
 ```
 
