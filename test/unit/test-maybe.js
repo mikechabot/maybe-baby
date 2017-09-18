@@ -232,6 +232,22 @@ describe('maybe-baby', () => {
                     });
                 });
             });
+            describe('path, prop, props', () => {
+                it('should return the same results for a simple path', () => {
+                    const maybeObj = Maybe.of(TEST_OBJECT);
+
+                    expect(maybeObj.path(TEST_PROPERTY).join()).to.equal(TEST_VALUE);
+                    expect(maybeObj.prop(TEST_PROPERTY).join()).to.equal(TEST_VALUE);
+                    expect(maybeObj.props(TEST_PROPERTY).join()).to.equal(TEST_VALUE);
+                });
+                it('should return the same results for a deep path', () => {
+                    TEST_OBJECT[LAYER_1] = { [LAYER_2]: { [LAYER_3]: TEST_ARRAY } };
+                    const maybeObj = Maybe.of(TEST_OBJECT);
+                    expect(maybeObj.path(`${LAYER_1}.${LAYER_2}.${LAYER_3}.1`).join()).to.equal(TEST_VALUE);
+                    expect(maybeObj.prop(LAYER_1).prop(LAYER_2).prop(LAYER_3).prop(1).join()).to.equal(TEST_VALUE);
+                    expect(maybeObj.props(LAYER_1, LAYER_2, LAYER_3, 1).join()).to.equal(TEST_VALUE);
+                });
+            });
         });
     });
     describe('Common Scenarios', () => {
