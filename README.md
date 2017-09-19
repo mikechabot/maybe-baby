@@ -56,7 +56,7 @@ These functions serve the same ultimate purpose: to return a monad of the value 
 | Function | Description | Example 
 | ----- | ---- | ----------- |
 | `path(<string>)` | Period-delimited string path | `path('foo.bar.1')` |
-| `props(...properties)` | Takes an indefinite list of arguments | `props('foo', 'bar', 1')` |
+| `props(...properties)` | Takes an indefinite list of arguments | `props('foo', 'bar', 1)` |
 | `prop(<string\|number>)` | Takes a single argument | `prop('foo').prop('bar').prop(1)` |
 
 ```javascript
