@@ -24,14 +24,14 @@ const personObj = { firstName: 'John', lastName: 'Smith', address: null };
 const person = Maybe.of(personObj);
 
 // The basics
-person.isJust()     // true
-person.isNothing()  // false
-person.join()       // { firstName: 'John', lastName: 'Smith', address: null }
+person.isJust();    // true
+person.isNothing(); // false
+person.join();      // { firstName: 'John', lastName: 'Smith', address: null }
 
 // Value retrieval
 person.prop('address').isNothing();     // true
 person.prop('firstName').isNothing();   // false   
-person.prop('firstName').join()         // 'John'
+person.prop('firstName').join();        // 'John'
 
 ```
 
