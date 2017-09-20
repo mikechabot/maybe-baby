@@ -54,7 +54,7 @@
 <a href="https://david-dm.org/mikechabot/maybe-baby?type=dev"><img src="https://david-dm.org/mikechabot/maybe-baby/dev-status.svg" alt="devDependencies Status"></a></p>
 <p><a href="https://nodei.co/npm/maybe-baby/"><img src="https://nodei.co/npm/maybe-baby.png" alt="NPM"></a></p>
 <ul>
-<li><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming">Maybe monad</a>#The_Maybe_monad) implemented in JavaScript. </li>
+<li><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming">Maybe monad</a> implemented in JavaScript. </li>
 <li>Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</li>
 </ul>
 <h2>Usage</h2><p>Minimize defensive coding with <code>maybe-baby</code> when data is unreliable:</p>
@@ -105,8 +105,7 @@ someVal.isJust();       // true</code></pre><h4>Use <code>path</code>, <code>pro
 <td><code>props('foo', 'bar', 1)</code></td>
 </tr>
 <tr>
-<td>`prop(&lt;string\</td>
-<td>number&gt;)`</td>
+<td><code>prop(string|number)</code></td>
 <td>Takes a single argument</td>
 <td><code>prop('foo').prop('bar').prop(1)</code></td>
 </tr>
