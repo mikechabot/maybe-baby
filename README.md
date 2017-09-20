@@ -13,6 +13,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
 - [Docs](#docs)
 - [Usage](#usage)
   - [isJust() / isNothing()](#isjust--isnothing)
+  - [path(), prop(), props()](#props)
 - [Installation](#installation)
 
 ## <a name="maybe-baby#docs">Docs</a>
@@ -53,7 +54,7 @@ function getZipCode(person) {
 }
 ```
 
-### <a name="usage#isJust">isJust() / isNothing()</a>
+### <a name="usage#isJust">isJust(), isNothing()</a>
 
 Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
 
@@ -67,9 +68,10 @@ aVal.isNothing();  // false
 aVal.isJust();     // true
 ```
 
-#### Use `path`, `props`, or `prop` to get values at arbitrary depths
+### <a name="usage#props">path(), prop(), props()</a>
 
-These functions serve the same ultimate purpose: to return a monad of the value at the specified path/location, however they each do it a bit differently. Keep in mind, these functions are chainable.
+* Use `path`, `props`, or `prop` to get values at arbitrary depths
+* These functions share the same purpose: to return value the specified path/location (wrapped in a monad), however they each do it a bit differently. Keep in mind, these functions are chainable:
 
 | Function | Description | Example 
 | ----- | ---- | ----------- |
