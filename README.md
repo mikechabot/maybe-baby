@@ -57,7 +57,7 @@ function getZipCode(person) {
 }
 ```
 
-### <a name="usage#isJust">isJust(), isNothing()</a>
+### <a name="usage#isJust">isJust, isNothing</a>
 
 Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
 
@@ -71,7 +71,7 @@ aVal.isNothing();  // false
 aVal.isJust();     // true
 ```
 
-### <a name="usage#props">path(), prop(), props()</a>
+### <a name="usage#props">path, prop, props</a>
 
 * Use `path`, `props`, or `prop` to get values at arbitrary depths
 * These functions share the same purpose: to return value the specified path/location (wrapped in a monad), however they each do it a bit differently. Keep in mind, these functions are chainable:
