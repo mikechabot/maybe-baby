@@ -14,6 +14,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
 - [Usage](#usage)
   - [isJust() / isNothing()](#isjust-isnothing)
   - [path(), prop(), props()](#path-prop-props)
+  - [map()](#map)
 - [Installation](#installation)
 
 ## <a name="maybe-baby#docs">Docs</a>
@@ -105,6 +106,17 @@ maybeObj.path('foo.bar.1').join();  // 456
 maybeObj.props('foo').join();           // { bar: [123, 456] }
 maybeObj.props('foo', 'bar').join();    // [123, 456]
 maybeObj.props('foo', 'bar', 1).join(); // 456
+```
+
+### <a name="usage#map">map()</a>
+
+Apply a transformation to the monad, and return a new monad:
+
+```javascript
+const val = 1;
+const newVal = Maybe.of(val).map(val => val + 1);
+
+newVal.join(); // 2;
 ```
 
 ## <a name="maybe-baby#installation">Installation</a>
