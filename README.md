@@ -25,7 +25,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
 When data is unreliable, minimize defensive coding with `maybe-baby` :
 
 ```javascript
-// Some data with missing values
+// Some data with missing values: no last name, no address
 const person = { 
   name: {
     first: 'John',
