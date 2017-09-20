@@ -18,6 +18,8 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
 
 ## <a name="maybe-baby#docs">Docs</a>
 
+Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc) with the [minami template](https://github.com/nijikokun/minami).
+
 * https://mikechabot.github.io/maybe-baby/
 
 ## <a name="maybe-baby#usage">Usage</a>
