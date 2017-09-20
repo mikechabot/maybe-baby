@@ -7,6 +7,7 @@
     "build": "npm run clear && npm run compile",
     "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec",
+    "generate-docs": "node_modules/.bin/jsdoc -c ./.jsdoc.json -t ./node_modules/minami/ README.md ./src/index.js",
     "compile": "babel src -d lib",
     "clear": "rm -rf ./lib"
   },
@@ -39,6 +40,10 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "istanbul": "^0.4.5",
+    "minami": "^1.2.3",
     "mocha": "^3.5.3"
+  },
+  "dependencies": {
+    "jsdoc": "^3.5.5"
   }
 }
