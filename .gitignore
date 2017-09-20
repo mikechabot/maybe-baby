@@ -30,6 +30,3 @@ dist
 # Lint report
 lint-report.html
 
-# jsdoc
-docs
-

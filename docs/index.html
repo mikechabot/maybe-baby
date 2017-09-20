@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Maybe.html">Maybe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#.of">of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isJust">isJust</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isNothing">isNothing</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#join">join</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#map">map</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#orElse">orElse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#path">path</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#prop">prop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#props">props</a></span></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>maybe-baby</h1><p><a href="https://travis-ci.org/mikechabot/maybe-baby"><img src="https://travis-ci.org/mikechabot/maybe-baby.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/mikechabot/maybe-baby?branch=master"><img src="https://coveralls.io/repos/github/mikechabot/maybe-baby/badge.svg?branch=master&amp;cacheBuster=1" alt="Coverage Status"></a>
+<a href="https://david-dm.org/mikechabot/maybe-baby"><img src="https://david-dm.org/mikechabot/maybe-baby.svg" alt="Dependency Status"></a>
+<a href="https://david-dm.org/mikechabot/maybe-baby?type=dev"><img src="https://david-dm.org/mikechabot/maybe-baby/dev-status.svg" alt="devDependencies Status"></a></p>
+<p><a href="https://nodei.co/npm/maybe-baby/"><img src="https://nodei.co/npm/maybe-baby.png" alt="NPM"></a></p>
+<ul>
+<li><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming">Maybe monad</a>#The_Maybe_monad) implemented in JavaScript. </li>
+<li>Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</li>
+</ul>
+<h2>Usage</h2><p>Minimize defensive coding with <code>maybe-baby</code> when data is unreliable:</p>
+<pre class="prettyprint source lang-javascript"><code>import Maybe from 'maybe-baby';
+
+// Arbitrary data
+const personObj = { firstName: 'John', lastName: 'Smith', address: null };
+
+// Create the monad
+const person = Maybe.of(personObj);
+
+// The basics
+person.isJust();    // true
+person.isNothing(); // false
+person.join();      // { firstName: 'John', lastName: 'Smith', address: null }
+
+// Value retrieval
+person.prop('address').isNothing();     // true
+person.prop('firstName').isNothing();   // false   
+person.prop('firstName').join();        // 'John'</code></pre><h4>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></h4><pre class="prettyprint source lang-javascript"><code>const noVal = Maybe.of(null);
+
+noVal.join();         // null
+noVal.isNothing();    // true
+noVal.isJust();       // false
+
+const someVal = Maybe.of(123);
+
+someVal.join();         // 123
+someVal.isNothing();    // false
+someVal.isJust();       // true</code></pre><h4>Use <code>path</code>, <code>props</code>, or <code>prop</code> to get values at arbitrary depths</h4><p>These functions serve the same ultimate purpose: to return a monad of the value at the specified path/location, however they each do it a bit differently. Keep in mind, these functions are chainable.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Example </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>path(&lt;string&gt;)</code></td>
+<td>Period-delimited string path</td>
+<td><code>path('foo.bar.1')</code></td>
+</tr>
+<tr>
+<td><code>props(...properties)</code></td>
+<td>Takes an indefinite list of arguments</td>
+<td><code>props('foo', 'bar', 1)</code></td>
+</tr>
+<tr>
+<td>`prop(&lt;string\</td>
+<td>number&gt;)`</td>
+<td>Takes a single argument</td>
+<td><code>prop('foo').prop('bar').prop(1)</code></td>
+</tr>
+</tbody>
+</table>
+<pre class="prettyprint source lang-javascript"><code>const deepObj = { foo: { bar: [123, 456] } };
+
+const deepVal = Maybe.of(deepObj);
+
+// Prop function
+deepVal.prop('foo').join();                       // { bar: [123,456] }
+deepVal.prop('foo').prop('bar').join();           // [123,456]
+deepVal.prop('foo').prop('bar').prop(1).join();   // 456
+
+// Path function
+deepVal.path('foo').join();                       // { bar: [123,456] }
+deepVal.path('foo.bar').join();                   // [123,456]
+deepVal.path('foo.bar.1').join();                 // 456
+
+// Props function
+deepVal.props('foo').join();                      // { bar: [123,456] }
+deepVal.props('foo', 'bar').join();               // [123,456]
+deepVal.props('foo', 'bar', 1).join();            // 456</code></pre><h2>Installation</h2><p>Install with yarn or npm:</p>
+<ul>
+<li><code>$ npm install --save maybe-baby</code></li>
+<li><code>$ yarn add maybe-baby</code></li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Sep 19 2017 22:34:01 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
