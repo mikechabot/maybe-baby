@@ -43,8 +43,5 @@
     "jsdoc": "^3.5.5",
     "minami": "^1.2.3",
     "mocha": "^3.5.3"
-  },
-  "dependencies": {
-    "jsdoc": "^3.5.5"
   }
 }
