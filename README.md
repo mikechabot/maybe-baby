@@ -12,7 +12,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
 
 - [Docs](#docs)
 - [Usage](#usage)
-  - [isJust() / isNothing()](usage#isJust)
+  - [isJust() / isNothing()](#isJust)
 - [Installation](#installation)
 
 ## <a name="maybe-baby#docs">Docs</a>
