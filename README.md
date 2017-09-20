@@ -1,5 +1,3 @@
-# maybe-baby
-
 [![Build Status](https://travis-ci.org/mikechabot/maybe-baby.svg?branch=master)](https://travis-ci.org/mikechabot/maybe-baby)
 [![Coverage Status](https://coveralls.io/repos/github/mikechabot/maybe-baby/badge.svg?branch=master&cacheBuster=1)](https://coveralls.io/github/mikechabot/maybe-baby?branch=master)
 [![Dependency Status](https://david-dm.org/mikechabot/maybe-baby.svg)](https://david-dm.org/mikechabot/maybe-baby)
@@ -7,10 +5,15 @@
 
 [![NPM](https://nodei.co/npm/maybe-baby.png)](https://nodei.co/npm/maybe-baby/)
 
+# maybe-baby
+
+- [Usage](#usage)
+- [Installation](#installation)
+
 * `maybe-baby` is the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad) implemented in JavaScript. 
 * Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-read blogpost [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
-## Usage
+## <a name="maybe-baby#usage">Usage</a>
 
 Minimize defensive coding with `maybe-baby` when data is unreliable:
 
@@ -80,7 +83,7 @@ deepVal.props('foo', 'bar').join();               // [123,456]
 deepVal.props('foo', 'bar', 1).join();            // 456
 ```
 
-## Installation
+## <a name="maybe-baby#installation">Installation</a>
 
 Install with yarn or npm:
 
