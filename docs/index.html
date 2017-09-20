@@ -48,43 +48,58 @@
 
 
     <section class="readme">
-        <article><h1>maybe-baby</h1><p><a href="https://travis-ci.org/mikechabot/maybe-baby"><img src="https://travis-ci.org/mikechabot/maybe-baby.svg?branch=master" alt="Build Status"></a>
+        <article><p><a href="https://travis-ci.org/mikechabot/maybe-baby"><img src="https://travis-ci.org/mikechabot/maybe-baby.svg?branch=master" alt="Build Status"></a>
 <a href="https://coveralls.io/github/mikechabot/maybe-baby?branch=master"><img src="https://coveralls.io/repos/github/mikechabot/maybe-baby/badge.svg?branch=master&amp;cacheBuster=1" alt="Coverage Status"></a>
 <a href="https://david-dm.org/mikechabot/maybe-baby"><img src="https://david-dm.org/mikechabot/maybe-baby.svg" alt="Dependency Status"></a>
 <a href="https://david-dm.org/mikechabot/maybe-baby?type=dev"><img src="https://david-dm.org/mikechabot/maybe-baby/dev-status.svg" alt="devDependencies Status"></a></p>
 <p><a href="https://nodei.co/npm/maybe-baby/"><img src="https://nodei.co/npm/maybe-baby.png" alt="NPM"></a></p>
+<h1>maybe-baby</h1><p><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming">Maybe monad</a> implemented in JavaScript.
+Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</p>
 <ul>
-<li><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming">Maybe monad</a> implemented in JavaScript. </li>
-<li>Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</li>
+<li><a href="#docs">Docs</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#isjust-isnothing">isJust() / isNothing()</a></li>
+<li><a href="#path-prop-props">path(), prop(), props()</a></li>
 </ul>
-<h2>Usage</h2><p>Minimize defensive coding with <code>maybe-baby</code> when data is unreliable:</p>
+</li>
+<li><a href="#installation">Installation</a></li>
+</ul>
+<h2><a name="maybe-baby#docs">Docs</a></h2><p>Documentation generated via <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> with the <a href="https://github.com/nijikokun/minami">minami template</a>.</p>
+<ul>
+<li>https://mikechabot.github.io/maybe-baby/</li>
+</ul>
+<h2><a name="maybe-baby#usage">Usage</a></h2><p>When data is unreliable, minimize defensive coding with <code>maybe-baby</code> :</p>
+<pre class="prettyprint source lang-javascript"><code>// Some data with missing values: no last name, no address
+const person = { 
+  name: {
+    first: 'John',
+    last : null
+  },
+  accountDetails: {
+    insuranceCode: 'BDX2321'
+  }
+};</code></pre><p>It looks like we're missing the <code>address</code> attribute on the <code>accountDetails</code> object. That's too bad since we're in a situation where we need the <code>zipCode</code> of the <code>person</code>, which lives on the <code>address</code>. Accessing it via dot notation will result in a <code>TypeError</code> (i.e. <code>person.accountDetails.address.zipCode</code>). </p>
+<p>One way to solve the problem is to write in some null checks, but that doesn't scale well. Another would be to use <a href="https://lodash.com/docs/4.17.4#get"><code>_.get()</code></a> or something similar, but these libs may have larger footprints than <code>maybe-baby</code>, and most likely wouldn't be implementing the monadic structure.</p>
+<p>Anyway, let's safely get the zip code. Although we're attempting to access properties on an undefined object, with <code>maybe-baby</code>, we're guaranteed to never encounter a <code>TypeError</code>:</p>
 <pre class="prettyprint source lang-javascript"><code>import Maybe from 'maybe-baby';
 
-// Arbitrary data
-const personObj = { firstName: 'John', lastName: 'Smith', address: null };
+function getZipCode(person) {
+  return Maybe.of(person)
+    .prop('accountDetails')
+    .prop('address')
+    .prop('zipCode')
+    .join();
+}</code></pre><h3><a name="usage#isJust">isJust(), isNothing()</a></h3><p>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></p>
+<pre class="prettyprint source lang-javascript"><code>const noVal = Maybe.of(null);
+noVal.isNothing();  // true
+noVal.isJust();     // false
 
-// Create the monad
-const person = Maybe.of(personObj);
-
-// The basics
-person.isJust();    // true
-person.isNothing(); // false
-person.join();      // { firstName: 'John', lastName: 'Smith', address: null }
-
-// Value retrieval
-person.prop('address').isNothing();     // true
-person.prop('firstName').isNothing();   // false   
-person.prop('firstName').join();        // 'John'</code></pre><h4>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></h4><pre class="prettyprint source lang-javascript"><code>const noVal = Maybe.of(null);
-
-noVal.join();         // null
-noVal.isNothing();    // true
-noVal.isJust();       // false
-
-const someVal = Maybe.of(123);
-
-someVal.join();         // 123
-someVal.isNothing();    // false
-someVal.isJust();       // true</code></pre><h4>Use <code>path</code>, <code>props</code>, or <code>prop</code> to get values at arbitrary depths</h4><p>These functions serve the same ultimate purpose: to return a monad of the value at the specified path/location, however they each do it a bit differently. Keep in mind, these functions are chainable.</p>
+const aVal = Maybe.of(123);
+aVal.isNothing();  // false
+aVal.isJust();     // true</code></pre><h3><a name="usage#props">path(), prop(), props()</a></h3><ul>
+<li>Use <code>path</code>, <code>props</code>, or <code>prop</code> to get values at arbitrary depths</li>
+<li>These functions share the same purpose: to return value the specified path/location (wrapped in a monad), however they each do it a bit differently. Keep in mind, these functions are chainable:</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -111,24 +126,14 @@ someVal.isJust();       // true</code></pre><h4>Use <code>path</code>, <code>pro
 </tr>
 </tbody>
 </table>
-<pre class="prettyprint source lang-javascript"><code>const deepObj = { foo: { bar: [123, 456] } };
-
-const deepVal = Maybe.of(deepObj);
-
-// Prop function
-deepVal.prop('foo').join();                       // { bar: [123,456] }
-deepVal.prop('foo').prop('bar').join();           // [123,456]
-deepVal.prop('foo').prop('bar').prop(1).join();   // 456
-
-// Path function
-deepVal.path('foo').join();                       // { bar: [123,456] }
-deepVal.path('foo.bar').join();                   // [123,456]
-deepVal.path('foo.bar.1').join();                 // 456
-
-// Props function
-deepVal.props('foo').join();                      // { bar: [123,456] }
-deepVal.props('foo', 'bar').join();               // [123,456]
-deepVal.props('foo', 'bar', 1).join();            // 456</code></pre><h2>Installation</h2><p>Install with yarn or npm:</p>
+<pre class="prettyprint source lang-javascript"><code>const someDeepObj = { foo: { bar: [123, 456] } };
+const maybeObj = Maybe.of(someDeepObj);</code></pre><h4><code>prop(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.prop('foo').join();                       // { bar: [123, 456] }
+maybeObj.prop('foo').prop('bar').join();           // [123, 456]
+maybeObj.prop('foo').prop('bar').prop(1).join();   // 456</code></pre><h4><code>path(&lt;string&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.path('foo').join();        // { bar: [123, 456] }
+maybeObj.path('foo.bar').join();    // [123, 456]
+maybeObj.path('foo.bar.1').join();  // 456</code></pre><h4><code>path(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.props('foo').join();           // { bar: [123, 456] }
+maybeObj.props('foo', 'bar').join();    // [123, 456]
+maybeObj.props('foo', 'bar', 1).join(); // 456</code></pre><h2><a name="maybe-baby#installation">Installation</a></h2><p>Install with yarn or npm:</p>
 <ul>
 <li><code>$ npm install --save maybe-baby</code></li>
 <li><code>$ yarn add maybe-baby</code></li>
@@ -145,7 +150,7 @@ deepVal.props('foo', 'bar', 1).join();            // 456</code></pre><h2>Install
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Sep 19 2017 22:34:01 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Sep 19 2017 23:36:29 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
