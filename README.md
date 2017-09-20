@@ -108,7 +108,7 @@ maybeObj.props('foo', 'bar').join();    // [123, 456]
 maybeObj.props('foo', 'bar', 1).join(); // 456
 ```
 
-### <a name="usage#map">map()</a>
+### <a name="usage#map">map(func)</a>
 
 Apply a transformation to the monad, and return a new monad:
 
