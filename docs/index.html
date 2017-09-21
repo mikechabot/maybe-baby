@@ -24,10 +24,17 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Maybe.html">Maybe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#.of">of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isJust">isJust</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isNothing">isNothing</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#join">join</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#map">map</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#orElse">orElse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#path">path</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#prop">prop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#props">props</a></span></li>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Maybe.html">Maybe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#.of">of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#chain">chain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isJust">isJust</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isNothing">isNothing</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#join">join</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#map">map</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#orElse">orElse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#path">path</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#prop">prop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#props">props</a></span></li>
 </nav>
 
 <div id="main">
+    
+
+    
+
+
+
+    
 
 
 
@@ -37,14 +44,7 @@
 
 
 
-
-
-
-
-
-
-
-
+    
 
 
     <section class="readme">
@@ -55,7 +55,7 @@
 <p><a href="https://nodei.co/npm/maybe-baby/"><img src="https://nodei.co/npm/maybe-baby.png" alt="NPM"></a></p>
 <p><a href="https://github.com/mikechabot/maybe-baby"><img src="https://img.shields.io/github/stars/mikechabot/maybe-baby.svg?style=social&amp;label=Star" alt="GitHub stars"></a>
 <a href="https://github.com/mikechabot/maybe-baby"><img src="https://img.shields.io/github/forks/mikechabot/maybe-baby.svg?style=social&amp;label=Fork" alt="GitHub forks"></a></p>
-<h1>maybe-baby</h1><p><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">Maybe monad</a> implemented in JavaScript.
+<h1>maybe-baby</h1><p><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming">Maybe monad</a>#The_Maybe_monad) implemented in JavaScript. 
 Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</p>
 <ul>
 <li><a href="#docs">Docs</a></li>
@@ -73,7 +73,7 @@ Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing
 </ul>
 <h2><a name="maybe-baby#usage">Usage</a></h2><p>When data is unreliable, minimize defensive coding with <code>maybe-baby</code> :</p>
 <pre class="prettyprint source lang-javascript"><code>// Some data with missing values: no last name, no address
-const person = {
+const person = { 
   name: {
     first: 'John',
     last : null
@@ -123,7 +123,8 @@ aVal.isJust();     // true</code></pre><h3><a name="usage#props">path, prop, pro
 <td><code>props('foo', 'bar', 1)</code></td>
 </tr>
 <tr>
-<td><code>prop(&lt;string|number&gt;)</code></td>
+<td>`prop(&lt;string\</td>
+<td>number&gt;)`</td>
 <td>Takes a single argument</td>
 <td><code>prop('foo').prop('bar').prop(1)</code></td>
 </tr>
@@ -157,7 +158,7 @@ newVal.join(); // 2;</code></pre><h2><a name="maybe-baby#installation">Installat
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 21 2017 13:17:21 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 21 2017 17:28:47 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

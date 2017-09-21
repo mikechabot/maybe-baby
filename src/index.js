@@ -14,7 +14,12 @@ const Maybe = function Maybe (val) {
 /**
  * Public constructor. Creates an instance of Maybe.
  * @param val {*} Object, string, or number
- * @example const myMaybe = Maybe.of({ foo: 'bar', baz: [1,2,3] });
+ * @example const exampleObj = {
+ *      foo: 'bar',
+ *      baz: [1,2,3]
+ * };
+ *
+ * const myMaybe = Maybe.of(exampleObj);
  * @returns {Maybe} A Maybe monad
  */
 Maybe.of = function (val) {
@@ -23,7 +28,11 @@ Maybe.of = function (val) {
 
 /**
  * Get the monad's value
- * @example myMaybe.join();
+ * @example const maybe1 = Maybe.of(123);
+ * const maybe2 = Maybe.of(null);
+ *
+ * maybe1.join();   // 123
+ * maybe2.join();   // null
  * @returns {*} Returns the value of the monad
  */
 Maybe.prototype.join = function () {
@@ -31,8 +40,12 @@ Maybe.prototype.join = function () {
 };
 
 /**
- * Determine whether the monad's value is defined
- * @example myMaybe.isJust();
+ * Determine whether the monad's value exists
+ * @example const maybe1 = Maybe.of(123);
+ * const maybe2 = Maybe.of(undefined);
+ *
+ * maybe1.isJust();    // true
+ * maybe2.isJust();    // false
  * @returns {boolean} <code>true</code> if the value is defined, <code>false</code> if the monad is null or undefined.
  */
 Maybe.prototype.isJust = function () {
@@ -41,7 +54,11 @@ Maybe.prototype.isJust = function () {
 
 /**
  * Determine whether the monad's value is null or undefined
- * @example myMaybe.isNothing();
+ * @example const maybe1 = Maybe.of(null);
+ * const maybe2 = Maybe.of(123);
+ *
+ * maybe1.isNothing();    // true
+ * maybe2.isNothing()     // false
  * @returns {boolean} <code>true</code> if the value is null or undefined, <code>false</code> if the value is defined.
  */
 Maybe.prototype.isNothing = function () {
@@ -52,7 +69,10 @@ Maybe.prototype.isNothing = function () {
  * Chain to the end of <code>prop</code>, <code>props</code>, or <code>path</code> as the
  * default value to return if the <code>isNothing()</code> is true
  * @param defaultValue {string} Return this value when <code>join()</code> is called and <code>isNothing()</code> is true
- * @example myMaybe.prop('qux').orElse(myDefault).join();
+ * @example const maybe1 = Maybe.of(null);
+ *
+ * maybe1.orElse('N/A');
+ * maybe1.join();   // 'N/A'
  * @returns {Maybe} A monad containing the default value
  */
 Maybe.prototype.orElse = function (defaultValue) {
@@ -65,8 +85,14 @@ Maybe.prototype.orElse = function (defaultValue) {
 /**
  * Get a value on the monad given a single property
  * @param property {string|number} Look for this property on the monad
- * @example myMaybe.prop('foo');
- * myMaybe.prop('baz').prop(2);
+ * @example const exampleObj = {
+ *      foo: 'bar',
+ *      baz: [1,2,3]
+ * };
+ *
+ * const maybeBar = Maybe.of(exampleObj).prop('foo');
+ *
+ * maybeBar.join();     // 'bar'
  * @returns {Maybe} A monad containing the value of a given property or index
  */
 Maybe.prototype.prop = function (property) {
@@ -78,8 +104,14 @@ Maybe.prototype.prop = function (property) {
 /**
  * Get a value on the monad given a property path in argument form
  * @param properties {string|number} Argument list that represents the property path to search
- * @example myMaybe.props('foo');
- * myMaybe.props('baz', 2);
+ * @example const exampleObj = {
+ *      foo: 'bar',
+ *      baz: [1,2,3]
+ * };
+ *
+ * const maybeArrayVal = Maybe.of(exampleObj).props('baz', 0);
+ *
+ * maybeArrayVal.join();     // 1
  * @returns {Maybe} A monad containing the value at a given path
  */
 Maybe.prototype.props = function (...properties) {
@@ -96,8 +128,14 @@ Maybe.prototype.props = function (...properties) {
 /**
  * Get a value on the monad given a property path in string form
  * @param path {string} A period delimited string representing the path (e.g. 'foo.bar.baz) to search
- * @example myMaybe.path('foo');
- * myMaybe.path('baz.2');
+ * @example const exampleObj = {
+ *      foo: 'bar',
+ *      baz: [1,2,3]
+ * };
+ *
+ * const maybeArrayVal = Maybe.of(exampleObj).path('baz.0');
+ *
+ * maybeArrayVal.join();     // 1
  * @returns {Maybe} A monad containing the value at a given path
  */
 Maybe.prototype.path = function (path) {
@@ -123,6 +161,14 @@ Maybe.prototype.map = function (transform) {
 /**
  * Chain together functions that return Maybe monads
  * @param fn {function} Function that is passed the value of the calling monad, and returns a monad.
+ * @example function addOne (val) {
+ *   return Maybe.of(val + 1);
+ * }
+ *
+ * const three = Maybe.of(1)
+ *  .chain(addOne)
+ *  .chain(addOne)
+ *  .join();
  * @returns {Maybe} A monad created from the result of the transformation
  */
 Maybe.prototype.chain = function (fn) {

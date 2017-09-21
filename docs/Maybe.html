@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Maybe.html">Maybe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#.of">of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isJust">isJust</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isNothing">isNothing</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#join">join</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#map">map</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#orElse">orElse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#path">path</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#prop">prop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#props">props</a></span></li>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Maybe.html">Maybe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#.of">of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#chain">chain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isJust">isJust</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isNothing">isNothing</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#join">join</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#map">map</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#orElse">orElse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#path">path</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#prop">prop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#props">props</a></span></li>
 </nav>
 
 <div id="main">
@@ -252,7 +252,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line20">line 20</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -365,7 +365,174 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const myMaybe = Maybe.of({ foo: 'bar', baz: [1,2,3] });</code></pre>
+    <pre class="prettyprint"><code>const exampleObj = {     foo: 'bar',     baz: [1,2,3]};const myMaybe = Maybe.of(exampleObj);</code></pre>
+
+</div>
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="chain"><span class="type-signature"></span>chain<span class="signature">(fn)</span><span class="type-signature"> &rarr; {<a href="Maybe.html">Maybe</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Chain together functions that return Maybe monads</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line174">line 174</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Function that is passed the value of the calling monad, and returns a monad.</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code><a href="Maybe.html">Maybe</a></code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>A monad created from the result of the transformation</p>
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>function addOne (val) {  return Maybe.of(val + 1);}const three = Maybe.of(1) .chain(addOne) .chain(addOne) .join();</code></pre>
 
 </div>
 
@@ -383,7 +550,237 @@
 
 
 <div class="description">
-    <p>Determine whether the monad's value is defined</p>
+    <p>Determine whether the monad's value exists</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>boolean</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p><code>true</code> if the value is defined, <code>false</code> if the monad is null or undefined.</p>
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>const maybe1 = Maybe.of(123);const maybe2 = Maybe.of(undefined);maybe1.isJust();    // truemaybe2.isJust();    // false</code></pre>
+
+</div>
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="isNothing"><span class="type-signature"></span>isNothing<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Determine whether the monad's value is null or undefined</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>boolean</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p><code>true</code> if the value is null or undefined, <code>false</code> if the value is defined.</p>
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>const maybe1 = Maybe.of(null);const maybe2 = Maybe.of(123);maybe1.isNothing();    // truemaybe2.isNothing()     // false</code></pre>
+
+</div>
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="join"><span class="type-signature"></span>join<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Get the monad's value</p>
 </div>
 
 
@@ -461,236 +858,6 @@
     </dt>
     <dd>
         
-<span class="param-type"><code>boolean</code></span>
-
-
-    </dd>
-</dl>
-
-
-<div class="param-desc">
-    <p><code>true</code> if the value is defined, <code>false</code> if the monad is null or undefined.</p>
-</div>
-
-    
-</div>
-
-
-
-<div class="section-examples">
-<h5>Example</h5>
-
-    <pre class="prettyprint"><code>myMaybe.isJust();</code></pre>
-
-</div>
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="isNothing"><span class="type-signature"></span>isNothing<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Determine whether the monad's value is null or undefined</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line47">line 47</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>boolean</code></span>
-
-
-    </dd>
-</dl>
-
-
-<div class="param-desc">
-    <p><code>true</code> if the value is null or undefined, <code>false</code> if the value is defined.</p>
-</div>
-
-    
-</div>
-
-
-
-<div class="section-examples">
-<h5>Example</h5>
-
-    <pre class="prettyprint"><code>myMaybe.isNothing();</code></pre>
-
-</div>
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="join"><span class="type-signature"></span>join<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    <p>Get the monad's value</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line29">line 29</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
 <span class="param-type"><code>*</code></span>
 
 
@@ -710,7 +877,7 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>myMaybe.join();</code></pre>
+    <pre class="prettyprint"><code>const maybe1 = Maybe.of(123);const maybe2 = Maybe.of(null);maybe1.join();   // 123maybe2.join();   // null</code></pre>
 
 </div>
 
@@ -764,7 +931,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line115">line 115</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line153">line 153</a>
     </li></ul></dd>
     
 
@@ -932,7 +1099,7 @@ default value to return if the <code>isNothing()</code> is true</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line58">line 58</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -1045,7 +1212,7 @@ default value to return if the <code>isNothing()</code> is true</p>
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>myMaybe.prop('qux').orElse(myDefault).join();</code></pre>
+    <pre class="prettyprint"><code>const maybe1 = Maybe.of(null);maybe1.orElse('N/A');maybe1.join();   // 'N/A'</code></pre>
 
 </div>
 
@@ -1099,7 +1266,7 @@ default value to return if the <code>isNothing()</code> is true</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line103">line 103</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line141">line 141</a>
     </li></ul></dd>
     
 
@@ -1212,7 +1379,7 @@ default value to return if the <code>isNothing()</code> is true</p>
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>myMaybe.path('foo');myMaybe.path('baz.2');</code></pre>
+    <pre class="prettyprint"><code>const exampleObj = {     foo: 'bar',     baz: [1,2,3]};const maybeArrayVal = Maybe.of(exampleObj).path('baz.0');maybeArrayVal.join();     // 1</code></pre>
 
 </div>
 
@@ -1266,7 +1433,7 @@ default value to return if the <code>isNothing()</code> is true</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line72">line 72</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line98">line 98</a>
     </li></ul></dd>
     
 
@@ -1382,7 +1549,7 @@ default value to return if the <code>isNothing()</code> is true</p>
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>myMaybe.prop('foo');myMaybe.prop('baz').prop(2);</code></pre>
+    <pre class="prettyprint"><code>const exampleObj = {     foo: 'bar',     baz: [1,2,3]};const maybeBar = Maybe.of(exampleObj).prop('foo');maybeBar.join();     // 'bar'</code></pre>
 
 </div>
 
@@ -1436,7 +1603,7 @@ default value to return if the <code>isNothing()</code> is true</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line85">line 85</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line117">line 117</a>
     </li></ul></dd>
     
 
@@ -1552,7 +1719,7 @@ default value to return if the <code>isNothing()</code> is true</p>
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>myMaybe.props('foo');myMaybe.props('baz', 2);</code></pre>
+    <pre class="prettyprint"><code>const exampleObj = {     foo: 'bar',     baz: [1,2,3]};const maybeArrayVal = Maybe.of(exampleObj).props('baz', 0);maybeArrayVal.join();     // 1</code></pre>
 
 </div>
 
@@ -1575,7 +1742,7 @@ default value to return if the <code>isNothing()</code> is true</p>
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 21 2017 13:17:21 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 21 2017 17:28:47 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

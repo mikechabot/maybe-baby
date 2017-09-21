@@ -266,7 +266,6 @@ describe('maybe-baby', () => {
                 const TEST_PROPERTY = 'foo';
                 const TEST_VALUE = 'bar';
                 const TEST_OBJECT = {[TEST_PROPERTY]: TEST_VALUE};
-
                 const underTest = Maybe.of(TEST_OBJECT).map(obj => obj[TEST_PROPERTY]);
                 expect(underTest.join()).to.equal(TEST_VALUE);
             });
@@ -297,7 +296,7 @@ describe('maybe-baby', () => {
             it('should apply the transformation to the monad\'s value (object)', () => {
                 const TEST_PROPERTY_1 = 'foo';
                 const TEST_PROPERTY_2 = 'bar';
-                const TEST_VALUE = [123,567];
+                const TEST_VALUE = [123, 567];
                 const TEST_OBJECT = { [TEST_PROPERTY_1]: { [TEST_PROPERTY_2]: TEST_VALUE } };
 
                 function getFoo (obj) {
