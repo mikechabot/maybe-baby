@@ -18,7 +18,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
   - [isJust, isNothing](#isjust-isnothing)
   - [path, prop, props](#path-prop-props)
   - [map](#mapfunc)
-  - [chain](#chainfunc))
+  - [chain](#chainfunc)
 - [Installation](#installation)
 
 ## <a name="maybe-baby#docs">Docs</a>
