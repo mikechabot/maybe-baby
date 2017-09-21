@@ -18,6 +18,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
   - [isJust, isNothing](#isjust-isnothing)
   - [path, prop, props](#path-prop-props)
   - [map](#mapfunc)
+  - [chain](#chain(func))
 - [Installation](#installation)
 
 ## <a name="maybe-baby#docs">Docs</a>
@@ -121,6 +122,23 @@ const newVal = Maybe.of(val).map(val => val + 1);
 
 newVal.join(); // 2;
 ```
+
+### <a name="usage#chain">chain(func)</a>
+
+Chain together functions that return Maybe monads:
+
+```javascript
+function addOne (val) {
+  return Maybe.of(val + 1);
+}
+
+const three = Maybe.of(1)
+ .chain(addOne)
+ .chain(addOne);
+
+ three.join(); // 3
+```
+
 
 ## <a name="maybe-baby#installation">Installation</a>
 
