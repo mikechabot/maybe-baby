@@ -1,6 +1,6 @@
 'use strict';
 
-const Maybe = require('maybe-baby');
+const Maybe = require('./lib');
 
 const maybeName = Maybe.of({
     foo: {
@@ -11,10 +11,15 @@ const maybeName = Maybe.of({
     }
 });
 
+function chainIt (bar) {
+    return Maybe.of(bar).prop('qux');
+}
+
 console.log(
     maybeName
         .prop('foo')
-        .prop('baz')
+        .prop('bar')
+        .chain(chainIt)
         .join()
 );
 

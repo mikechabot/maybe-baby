@@ -16,6 +16,7 @@ describe('maybe-baby', () => {
             it('should have a join function', () => { expect(testMaybe.join).to.be.a('function'); });
             it('should have an orElse function', () => { expect(testMaybe.orElse).to.be.a('function'); });
             it('should have a map function', () => { expect(testMaybe.map).to.be.a('function'); });
+            it('should have a chain function', () => { expect(testMaybe.chain).to.be.a('function'); });
             it('should have a path function', () => { expect(testMaybe.path).to.be.a('function'); });
             it('should have a prop function', () => { expect(testMaybe.prop).to.be.a('function'); });
             it('should have a props function', () => { expect(testMaybe.props).to.be.a('function'); });
@@ -247,6 +248,79 @@ describe('maybe-baby', () => {
                     expect(maybeObj.prop(LAYER_1).prop(LAYER_2).prop(LAYER_3).prop(1).join()).to.equal(TEST_VALUE);
                     expect(maybeObj.props(LAYER_1, LAYER_2, LAYER_3, 1).join()).to.equal(TEST_VALUE);
                 });
+            });
+        });
+    });
+    describe('Map', () => {
+        describe('map(transform)', () => {
+            it('should throw an error if transform is not a function', () => {
+                const underTest = Maybe.of(1);
+                expect(() => { underTest.map(); }).to.throw('transform must be a function');
+            });
+            it('should apply the transformation to the monad\'s value (numeric)', () => {
+                const addOne = monadVal => monadVal + 1;
+                const underTest = Maybe.of(1).map(addOne);
+                expect(underTest.join()).to.equal(2);
+            });
+            it('should apply the transformation to the monad\'s value (object)', () => {
+                const TEST_PROPERTY = 'foo';
+                const TEST_VALUE = 'bar';
+                const TEST_OBJECT = {[TEST_PROPERTY]: TEST_VALUE};
+
+                const underTest = Maybe.of(TEST_OBJECT).map(obj => obj[TEST_PROPERTY]);
+                expect(underTest.join()).to.equal(TEST_VALUE);
+            });
+            it('should apply the transformation to the monad\'s value (string)', () => {
+                const foo = 'foo';
+                const bar = 'bar';
+                const underTest = Maybe.of(foo).map(obj => (obj + bar));
+                expect(underTest.join()).to.equal(`${foo}${bar}`);
+            });
+        });
+    });
+    describe('Chain', () => {
+        describe('chain(transform)', () => {
+            it('should throw an error if transform is not a function', () => {
+                const underTest = Maybe.of(1);
+                expect(() => { underTest.chain(); }).to.throw('transform must be a function');
+            });
+            it('should apply the transformation to the monad\'s value (numeric)', () => {
+                function addOne (bar) {
+                    return Maybe.of(bar + 1);
+                }
+                const underTest = Maybe
+                    .of(1)
+                    .chain(addOne)
+                    .chain(addOne);
+                expect(underTest.join()).to.equal(3);
+            });
+            it('should apply the transformation to the monad\'s value (object)', () => {
+                const TEST_PROPERTY_1 = 'foo';
+                const TEST_PROPERTY_2 = 'bar';
+                const TEST_VALUE = [123,567];
+                const TEST_OBJECT = { [TEST_PROPERTY_1]: { [TEST_PROPERTY_2]: TEST_VALUE } };
+
+                function getFoo (obj) {
+                    return Maybe.of(obj).prop('foo');
+                }
+
+                function getBar (obj) {
+                    return Maybe.of(obj).prop('bar');
+                }
+
+                const underTest = Maybe
+                    .of(TEST_OBJECT)
+                    .chain(getFoo)
+                    .chain(getBar);
+
+                expect(underTest.join()).to.equal(TEST_VALUE);
+            });
+            it('should apply the transformation to the monad\'s value (string)', () => {
+                const underTest = Maybe
+                    .of('a')
+                    .chain((val) => Maybe.of(val + 'b'))
+                    .chain((val) => Maybe.of(val + 'c'));
+                expect(underTest.join()).to.equal('abc');
             });
         });
     });
