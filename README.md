@@ -5,6 +5,9 @@
 
 [![NPM](https://nodei.co/npm/maybe-baby.png)](https://nodei.co/npm/maybe-baby/)
 
+[![GitHub stars](https://img.shields.io/github/stars/mikechabot/maybe-baby.svg?style=social&label=Star)](https://github.com/mikechabot/maybe-baby)
+[![GitHub forks](https://img.shields.io/github/forks/mikechabot/maybe-baby.svg?style=social&label=Fork)](https://github.com/mikechabot/maybe-baby)
+
 # maybe-baby
 
 `maybe-baby` is the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad) implemented in JavaScript. 
