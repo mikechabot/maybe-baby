@@ -142,7 +142,7 @@ const three = Maybe.of(1)
 
 ## <a name="maybe-baby#usage">Example Usage</a>
 
-Some object with an arbitrary shape:
+1. Some object with an arbitrary shape:
 ```javascript
 const person = {
     firstName     : 'John',
@@ -154,7 +154,7 @@ const person = {
 };
 ```
 
-Example domain service that implements `maybe-baby` (`chain` and `prop`) to safely retrieve values from an object:
+2. Example domain service that implements `maybe-baby` (`chain` and `prop`) to safely retrieve values from an object:
 ```javascript
 
 const FLAT_PROPS = {
@@ -205,7 +205,7 @@ const PersonService = svc = {
 };
 ```
 
-Usage of service:
+3. Usage of service:
 ```javascript
 const firstName = PersonService.getFirsName(person);
 const lastName = PersonService.getLastName(person);
@@ -215,7 +215,7 @@ const address = PersonService.getAddress(person);
 const zipCode = PersonService.getZipCode(person);
 ```
 
-Get values from the Maybes:
+4. Get values from the Maybes:
 ```javascript
 firstName.join();      // 'John'
 lastName.join();       // null
