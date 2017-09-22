@@ -14,11 +14,12 @@
 Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-read blogpost [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
 - [Docs](#docs)
-- [Usage](#usage)
+- [API](#api)
   - [isJust, isNothing](#isjust-isnothing)
   - [path, prop, props](#path-prop-props)
   - [map](#mapfunc)
   - [chain](#chainfunc)
+- [Example Usage](#example-usage)
 - [Installation](#installation)
 
 ## <a name="maybe-baby#docs">Docs</a>
@@ -27,7 +28,7 @@ Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc) with the [m
 
 * https://mikechabot.github.io/maybe-baby/
 
-## <a name="maybe-baby#usage">Usage</a>
+## <a name="maybe-baby#api">API</a>
 
 When data is unreliable, minimize defensive coding with `maybe-baby` :
 
@@ -139,6 +140,90 @@ const three = Maybe.of(1)
  three.join(); // 3
 ```
 
+## <a name="maybe-baby#usage">Example Usage</a>
+
+Some object with an arbitrary shape:
+```javascript
+const person = {
+    firstName     : 'John',
+    lastName      : null,
+    accountDetails: {
+        insuranceCode: 'BDX2321'
+        address      : null
+    }
+};
+```
+
+Example domain service that implements `maybe-baby` (`chain` and `prop`) to safely retrieve values from an object:
+```javascript
+
+const FLAT_PROPS = {
+  FIRST_NAME: 'firstName',
+  LAST_NAME : 'lastName',
+  ACCT_DTLS : 'accountDetails',
+  INSR_CODE : 'insuranceCode',
+  ADDRESS   : 'address',
+  ZIP_CODE  : 'zipCode'
+}
+
+let svc = {};
+const PersonService = svc = {
+    getFirsName (person) {
+        return Maybe
+            .of(person)
+            .prop(FLAT_PROPS.FIRST_NAME);
+    },
+    getLastName (person) {
+        return Maybe
+            .of(person)
+            .prop(FLAT_PROPS.LAST_NAME);
+    },
+    getAccountDetails (person) {
+        return Maybe
+            .of(person)
+            .prop(FLAT_PROPS.ACCT_DTLS);
+    },
+    getInsuranceCode (person) {
+        return Maybe
+            .of(person)
+            .chain(svc.getAccountDetails)
+            .prop(FLAT_PROPS.INSR_CODE);
+    },
+    getAddress (person) {
+        return Maybe
+            .of(person)
+            .chain(svc.getAccountDetails)
+            .prop(FLAT_PROPS.ADDRESS);
+    },
+    getZipCode (person) {
+        return Maybe
+            .of(person)
+            .chain(svc.getAccountDetails)
+            .chain(svc.getAddress)
+            .prop(FLAT_PROPS.ZIP_CODE);
+    }
+};
+```
+
+Usage of service:
+```javascript
+const firstName = PersonService.getFirsName(person);
+const lastName = PersonService.getLastName(person);
+const accountDetails = PersonService.getAccountDetails(person);
+const insuranceCode = PersonService.getInsuranceCode(person);
+const address = PersonService.getAddress(person);
+const zipCode = PersonService.getZipCode(person);
+```
+
+Get values from the Maybes:
+```javascript
+firstName.join();      // 'John'
+lastName.join();       // null
+accountDetails.join(); // { insuranceCode: 'BDX2321' }
+insuranceCode.join();  // BDX2321
+address.join();        // null
+zipCode.join();        // undefined
+```
 
 ## <a name="maybe-baby#installation">Installation</a>
 
