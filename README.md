@@ -220,7 +220,7 @@ const zipCode = PersonService.getZipCode(person);
 firstName.join();      // 'John'
 lastName.join();       // null
 accountDetails.join(); // { insuranceCode: 'BDX2321' }
-insuranceCode.join();  // BDX2321
+insuranceCode.join();  // 'BDX2321'
 address.join();        // null
 zipCode.join();        // undefined
 ```
