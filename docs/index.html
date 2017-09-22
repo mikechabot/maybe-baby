@@ -58,16 +58,17 @@
 <h1>maybe-baby</h1><p><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">Maybe monad</a> implemented in JavaScript.
 Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</p>
 <ul>
-<li><a href="#usage">Usage</a><ul>
-<li><a href="#isJust">isJust, isNothing</a></li>
+<li><a href="#api">API</a><ul>
+<li><a href="#isjust">isJust, isNothing</a></li>
 <li><a href="#path">path, prop, props</a></li>
-<li><a href="#mapfunc">map</a></li>
-<li><a href="#chainfunc">chain</a></li>
+<li><a href="#map">map</a></li>
+<li><a href="#chain">chain</a></li>
 </ul>
 </li>
+<li><a href="#example-usage">Example Usage</a></li>
 <li><a href="#installation">Installation</a></li>
 </ul>
-<h2><a name="#usage">Usage</a></h2><p>When data is unreliable, minimize defensive coding with <code>maybe-baby</code> :</p>
+<h2><a name="api">API</a></h2><p>When data is unreliable, minimize defensive coding with <code>maybe-baby</code> :</p>
 <pre class="prettyprint source lang-javascript"><code>// Some data with missing values: no last name, no address
 const person = { 
   name: {
@@ -88,7 +89,7 @@ function getZipCode(person) {
     .prop('address')
     .prop('zipCode')
     .join();
-}</code></pre><h3><a name="isJust">isJust, isNothing</a></h3><p>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></p>
+}</code></pre><h3><a name="isjust">isJust, isNothing</a></h3><p>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></p>
 <pre class="prettyprint source lang-javascript"><code>const noVal = Maybe.of(null);
 noVal.isNothing();  // true
 noVal.isJust();     // false
@@ -119,7 +120,7 @@ aVal.isJust();     // true</code></pre><h3><a name="path">path, prop, props</a><
 <td><code>props('foo', 'bar', 1)</code></td>
 </tr>
 <tr>
-<td><code>(&lt;string|number&gt;)</code></td>
+<td><code>prop(&lt;string|number&gt;)</code></td>
 <td>Takes a single argument</td>
 <td><code>prop('foo').prop('bar').prop(1)</code></td>
 </tr>
@@ -132,11 +133,11 @@ maybeObj.prop('foo').prop('bar').prop(1).join();   // 456</code></pre><h4><code>
 maybeObj.path('foo.bar').join();    // [123, 456]
 maybeObj.path('foo.bar.1').join();  // 456</code></pre><h4><code>path(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.props('foo').join();           // { bar: [123, 456] }
 maybeObj.props('foo', 'bar').join();    // [123, 456]
-maybeObj.props('foo', 'bar', 1).join(); // 456</code></pre><h3><a name="mapfunc">map(func)</a></h3><p>Apply a transformation to the monad, and return a new monad:</p>
+maybeObj.props('foo', 'bar', 1).join(); // 456</code></pre><h3><a name="map">map(func)</a></h3><p>Apply a transformation to the monad, and return a new monad:</p>
 <pre class="prettyprint source lang-javascript"><code>const val = 1;
 const newVal = Maybe.of(val).map(val => val + 1);
 
-newVal.join(); // 2;</code></pre><h3><a name="chainfunc">chain(func)</a></h3><p>Chain together functions that return Maybe monads:</p>
+newVal.join(); // 2;</code></pre><h3><a name="chain">chain(func)</a></h3><p>Chain together functions that return Maybe monads:</p>
 <pre class="prettyprint source lang-javascript"><code>function addOne (val) {
   return Maybe.of(val + 1);
 }
@@ -145,7 +146,82 @@ const three = Maybe.of(1)
  .chain(addOne)
  .chain(addOne);
 
- three.join(); // 3</code></pre><h2><a name="installation">Installation</a></h2><p>Install with yarn or npm:</p>
+ three.join(); // 3</code></pre><h2><a name="example-usage">Example Usage</a></h2><ol>
+<li>Some object with an arbitrary shape.</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>const person = {
+    firstName     : 'John',
+    lastName      : null,
+    accountDetails: {
+        insuranceCode: 'BDX2321'
+        address      : null
+    }
+};</code></pre><ol>
+<li>Example domain service that implements <code>maybe-baby</code> (<code>chain</code> and <code>prop</code>) to safely retrieve values from an object.</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>
+const FLAT_PROPS = {
+  FIRST_NAME: 'firstName',
+  LAST_NAME : 'lastName',
+  ACCT_DTLS : 'accountDetails',
+  INSR_CODE : 'insuranceCode',
+  ADDRESS   : 'address',
+  ZIP_CODE  : 'zipCode'
+}
+
+let svc = {};
+const PersonService = svc = {
+    getFirsName (person) {
+        return Maybe
+            .of(person)
+            .prop(FLAT_PROPS.FIRST_NAME);
+    },
+    getLastName (person) {
+        return Maybe
+            .of(person)
+            .prop(FLAT_PROPS.LAST_NAME);
+    },
+    getAccountDetails (person) {
+        return Maybe
+            .of(person)
+            .prop(FLAT_PROPS.ACCT_DTLS);
+    },
+    getInsuranceCode (person) {
+        return Maybe
+            .of(person)
+            .chain(svc.getAccountDetails)
+            .prop(FLAT_PROPS.INSR_CODE);
+    },
+    getAddress (person) {
+        return Maybe
+            .of(person)
+            .chain(svc.getAccountDetails)
+            .prop(FLAT_PROPS.ADDRESS);
+    },
+    getZipCode (person) {
+        return Maybe
+            .of(person)
+            .chain(svc.getAccountDetails)
+            .chain(svc.getAddress)
+            .prop(FLAT_PROPS.ZIP_CODE);
+    }
+};</code></pre><ol>
+<li>Get monad-wrapped values from service.</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>const firstName = PersonService.getFirsName(person);
+const lastName = PersonService.getLastName(person);
+const accountDetails = PersonService.getAccountDetails(person);
+const insuranceCode = PersonService.getInsuranceCode(person);
+const address = PersonService.getAddress(person);
+const zipCode = PersonService.getZipCode(person);</code></pre><ol>
+<li>Get values from the Maybes.</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>firstName.join();      // 'John'
+lastName.join();       // null
+accountDetails.join(); // { insuranceCode: 'BDX2321', address: null }
+insuranceCode.join();  // 'BDX2321'
+address.join();        // null
+zipCode.join();        // undefined</code></pre><h2><a name="installation">Installation</a></h2><p>Install with yarn or npm:</p>
 <ul>
 <li><code>$ npm install --save maybe-baby</code></li>
 <li><code>$ yarn add maybe-baby</code></li>
@@ -162,7 +238,7 @@ const three = Maybe.of(1)
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 21 2017 21:10:19 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 21 2017 21:40:16 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
