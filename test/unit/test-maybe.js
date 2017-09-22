@@ -31,7 +31,7 @@ describe('maybe-baby', () => {
             expect(Maybe.of).to.be.a('function');
         });
         TEST_TYPES.forEach(testType => {
-            it(`should return valid monad when passed ${testType.label}`, () => {
+            it(`should return a monad when passed ${testType.label}`, () => {
                 const testMaybe = Maybe.of(testType.value);
                 expect(testMaybe.__value).to.equal(testType.value);
             });
@@ -44,74 +44,133 @@ describe('maybe-baby', () => {
             NULL_UNDEFINED_VALUES = [null, undefined];
             VALID_TEST_VALUES = [123, 'foo', '', [], {}, 0, false];
         });
-        describe('Common Functions', () => {
-            describe('join()', () => {
-                it('should return the value of __value', () => {
-                    VALID_TEST_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue);
-                        expect(testMaybe.__value).to.equal(testValue);
-                        expect(testMaybe.join()).to.equal(testValue);
-                    });
-                });
-                it('should return the value passed to orElse if isNothing() is true', () => {
-                    const OR_ELSE_VALUE = 'foo';
-                    NULL_UNDEFINED_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue).orElse(OR_ELSE_VALUE);
-                        expect(testMaybe.join()).to.equal(OR_ELSE_VALUE);
-                    });
+        describe('join()', () => {
+            it('should return the value of __value (unchecked)', () => {
+                [...NULL_UNDEFINED_VALUES, ...VALID_TEST_VALUES].forEach(testValue => {
+                    const testMaybe = Maybe.of(testValue);
+                    expect(testMaybe.__value).to.equal(testValue);
+                    expect(testMaybe.join()).to.equal(testValue);
                 });
             });
-            describe('isJust()', () => {
-                it('should return true when __value is not null or undefined', () => {
-                    VALID_TEST_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue);
-                        expect(testMaybe.isJust()).to.equal(true);
-                    });
-                });
-                it('should return false __value is null or undefined', () => {
-                    NULL_UNDEFINED_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue);
-                        expect(testMaybe.isJust()).to.equal(false);
-                    });
+        });
+        describe('isJust()', () => {
+            it('should return true when __value is not null or undefined', () => {
+                VALID_TEST_VALUES.forEach(testValue => {
+                    const testMaybe = Maybe.of(testValue);
+                    expect(testMaybe.isJust()).to.equal(true);
                 });
             });
-            describe('isNothing()', () => {
-                it('should return false when __value is not null or undefined', () => {
-                    VALID_TEST_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue);
-                        expect(testMaybe.isNothing()).to.equal(false);
-                    });
-                });
-                it('should return true __value is null or undefined', () => {
-                    NULL_UNDEFINED_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue);
-                        expect(testMaybe.isNothing()).to.equal(true);
-                    });
+            it('should return false __value is null or undefined', () => {
+                NULL_UNDEFINED_VALUES.forEach(testValue => {
+                    const testMaybe = Maybe.of(testValue);
+                    expect(testMaybe.isJust()).to.equal(false);
                 });
             });
-            describe('orElse(<value>)', () => {
-                it('should return this value as the default if isNothing() is true', () => {
-                    const OR_ELSE_VALUE = 'foo';
-                    NULL_UNDEFINED_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue).orElse(OR_ELSE_VALUE);
-                        expect(testMaybe.join()).to.equal(OR_ELSE_VALUE);
-                    });
+        });
+        describe('isNothing()', () => {
+            it('should return false when __value is not null or undefined', () => {
+                VALID_TEST_VALUES.forEach(testValue => {
+                    const testMaybe = Maybe.of(testValue);
+                    expect(testMaybe.isNothing()).to.equal(false);
                 });
-                it('should not return this value if isNothing() is false', () => {
-                    const OR_ELSE_VALUE = 'foo';
-                    VALID_TEST_VALUES.forEach(testValue => {
-                        const testMaybe = Maybe.of(testValue).orElse(OR_ELSE_VALUE);
-                        expect(testMaybe.join()).to.equal(testValue);
-                    });
+            });
+            it('should return true __value is null or undefined', () => {
+                NULL_UNDEFINED_VALUES.forEach(testValue => {
+                    const testMaybe = Maybe.of(testValue);
+                    expect(testMaybe.isNothing()).to.equal(true);
                 });
-                it('should return undefined (no value was passed) if isNothing() is true', () => {
-                    const testMaybe = Maybe.of().orElse();
-                    expect(testMaybe.join()).to.equal(undefined);
+            });
+        });
+        describe('orElse(<value>)', () => {
+            it('should return this value as the default if isNothing() is true', () => {
+                const OR_ELSE_VALUE = 'foo';
+                NULL_UNDEFINED_VALUES.forEach(testValue => {
+                    const testMaybe = Maybe.of(testValue).orElse(OR_ELSE_VALUE);
+                    expect(testMaybe.join()).to.equal(OR_ELSE_VALUE);
                 });
-                it('should not return undefined if isNothing() is false', () => {
-                    const testMaybe = Maybe.of(123).orElse();
-                    expect(testMaybe.join()).to.not.equal(undefined);
+            });
+            it('should not return this value if isNothing() is false', () => {
+                const OR_ELSE_VALUE = 'foo';
+                VALID_TEST_VALUES.forEach(testValue => {
+                    const testMaybe = Maybe.of(testValue).orElse(OR_ELSE_VALUE);
+                    expect(testMaybe.join()).to.equal(testValue);
                 });
+            });
+            it('should return undefined (no value was passed) if isNothing() is true', () => {
+                const testMaybe = Maybe.of().orElse();
+                expect(testMaybe.join()).to.equal(undefined);
+            });
+            it('should not return undefined if isNothing() is false', () => {
+                const testMaybe = Maybe.of(123).orElse();
+                expect(testMaybe.join()).to.not.equal(undefined);
+            });
+        });
+        describe('map(transform)', () => {
+            it('should throw an error if transform is not a function', () => {
+                const underTest = Maybe.of(1);
+                expect(() => { underTest.map(); }).to.throw('transform must be a function');
+            });
+            it('should apply the transformation to the monad\'s value (numeric)', () => {
+                const addOne = monadVal => monadVal + 1;
+                const underTest = Maybe.of(1).map(addOne);
+                expect(underTest.join()).to.equal(2);
+            });
+            it('should apply the transformation to the monad\'s value (object)', () => {
+                const TEST_PROPERTY = 'foo';
+                const TEST_VALUE = 'bar';
+                const TEST_OBJECT = {[TEST_PROPERTY]: TEST_VALUE};
+                const underTest = Maybe.of(TEST_OBJECT).map(obj => obj[TEST_PROPERTY]);
+                expect(underTest.join()).to.equal(TEST_VALUE);
+            });
+            it('should apply the transformation to the monad\'s value (string)', () => {
+                const foo = 'foo';
+                const bar = 'bar';
+                const underTest = Maybe.of(foo).map(obj => (obj + bar));
+                expect(underTest.join()).to.equal(`${foo}${bar}`);
+            });
+        });
+        describe('chain(transform)', () => {
+            it('should throw an error if transform is not a function', () => {
+                const underTest = Maybe.of(1);
+                expect(() => { underTest.chain(); }).to.throw('transform must be a function');
+            });
+            it('should apply the transformation to the monad\'s value (numeric)', () => {
+                function addOne (bar) {
+                    return Maybe.of(bar + 1);
+                }
+                const underTest = Maybe
+                    .of(1)
+                    .chain(addOne)
+                    .chain(addOne);
+                expect(underTest.join()).to.equal(3);
+            });
+            it('should apply the transformation to the monad\'s value (object)', () => {
+                const TEST_PROPERTY_1 = 'foo';
+                const TEST_PROPERTY_2 = 'bar';
+                const TEST_VALUE = [123, 567];
+                const TEST_OBJECT = { [TEST_PROPERTY_1]: { [TEST_PROPERTY_2]: TEST_VALUE } };
+
+                function getFoo (obj) {
+                    return Maybe.of(obj).prop('foo');
+                }
+
+                function getBar (obj) {
+                    return Maybe.of(obj).prop('bar');
+                }
+
+                const underTest = Maybe
+                    .of(TEST_OBJECT)
+                    .chain(getFoo)
+                    .chain(getBar);
+
+                expect(underTest.join()).to.equal(TEST_VALUE);
+            });
+            it('should apply the transformation to the monad\'s value (string)', () => {
+                const underTest = Maybe
+                    .of('a')
+                    .chain((val) => Maybe.of(val + 'b'))
+                    .chain((val) => Maybe.of(val + 'c'));
+                expect(underTest.join()).to.equal('abc');
             });
         });
         describe('Property and Path Functions', () => {
@@ -180,8 +239,7 @@ describe('maybe-baby', () => {
                     expect(maybeObj.props(LAYER_1, LAYER_2, LAYER_3, 1).join()).to.equal(TEST_VALUE);
                 });
                 it('should return an empty monad if the value does not exist', () => {
-                    TEST_OBJECT[LAYER_1] = { [LAYER_2]: TEST_ARRAY };
-                    const maybeObj = Maybe.of(TEST_OBJECT);
+                    const maybeObj = Maybe.of(null);
                     expect(maybeObj.props(LAYER_1, 0).join()).to.be.undefined;
                     expect(maybeObj.props(LAYER_1, 2).join()).to.be.undefined;
                 });
@@ -236,7 +294,6 @@ describe('maybe-baby', () => {
             describe('path, prop, props', () => {
                 it('should return the same results for a simple path', () => {
                     const maybeObj = Maybe.of(TEST_OBJECT);
-
                     expect(maybeObj.path(TEST_PROPERTY).join()).to.equal(TEST_VALUE);
                     expect(maybeObj.prop(TEST_PROPERTY).join()).to.equal(TEST_VALUE);
                     expect(maybeObj.props(TEST_PROPERTY).join()).to.equal(TEST_VALUE);
@@ -248,208 +305,6 @@ describe('maybe-baby', () => {
                     expect(maybeObj.prop(LAYER_1).prop(LAYER_2).prop(LAYER_3).prop(1).join()).to.equal(TEST_VALUE);
                     expect(maybeObj.props(LAYER_1, LAYER_2, LAYER_3, 1).join()).to.equal(TEST_VALUE);
                 });
-            });
-        });
-    });
-    describe('Map', () => {
-        describe('map(transform)', () => {
-            it('should throw an error if transform is not a function', () => {
-                const underTest = Maybe.of(1);
-                expect(() => { underTest.map(); }).to.throw('transform must be a function');
-            });
-            it('should apply the transformation to the monad\'s value (numeric)', () => {
-                const addOne = monadVal => monadVal + 1;
-                const underTest = Maybe.of(1).map(addOne);
-                expect(underTest.join()).to.equal(2);
-            });
-            it('should apply the transformation to the monad\'s value (object)', () => {
-                const TEST_PROPERTY = 'foo';
-                const TEST_VALUE = 'bar';
-                const TEST_OBJECT = {[TEST_PROPERTY]: TEST_VALUE};
-                const underTest = Maybe.of(TEST_OBJECT).map(obj => obj[TEST_PROPERTY]);
-                expect(underTest.join()).to.equal(TEST_VALUE);
-            });
-            it('should apply the transformation to the monad\'s value (string)', () => {
-                const foo = 'foo';
-                const bar = 'bar';
-                const underTest = Maybe.of(foo).map(obj => (obj + bar));
-                expect(underTest.join()).to.equal(`${foo}${bar}`);
-            });
-        });
-    });
-    describe('Chain', () => {
-        describe('chain(transform)', () => {
-            it('should throw an error if transform is not a function', () => {
-                const underTest = Maybe.of(1);
-                expect(() => { underTest.chain(); }).to.throw('transform must be a function');
-            });
-            it('should apply the transformation to the monad\'s value (numeric)', () => {
-                function addOne (bar) {
-                    return Maybe.of(bar + 1);
-                }
-                const underTest = Maybe
-                    .of(1)
-                    .chain(addOne)
-                    .chain(addOne);
-                expect(underTest.join()).to.equal(3);
-            });
-            it('should apply the transformation to the monad\'s value (object)', () => {
-                const TEST_PROPERTY_1 = 'foo';
-                const TEST_PROPERTY_2 = 'bar';
-                const TEST_VALUE = [123, 567];
-                const TEST_OBJECT = { [TEST_PROPERTY_1]: { [TEST_PROPERTY_2]: TEST_VALUE } };
-
-                function getFoo (obj) {
-                    return Maybe.of(obj).prop('foo');
-                }
-
-                function getBar (obj) {
-                    return Maybe.of(obj).prop('bar');
-                }
-
-                const underTest = Maybe
-                    .of(TEST_OBJECT)
-                    .chain(getFoo)
-                    .chain(getBar);
-
-                expect(underTest.join()).to.equal(TEST_VALUE);
-            });
-            it('should apply the transformation to the monad\'s value (string)', () => {
-                const underTest = Maybe
-                    .of('a')
-                    .chain((val) => Maybe.of(val + 'b'))
-                    .chain((val) => Maybe.of(val + 'c'));
-                expect(underTest.join()).to.equal('abc');
-            });
-        });
-    });
-    describe('Common Scenarios', () => {
-        describe('Person 1', () => {
-            let person1;
-            let person1Maybe;
-            beforeEach(() => {
-                person1 = { firstName: 'Person', address: null };
-                person1Maybe = Maybe.of(person1);
-            });
-            it('should return a monad containing the person object', () => {
-                expect(person1Maybe.isJust).to.exist;
-                expect(person1Maybe.isJust()).to.be.true;
-                expect(person1Maybe.join()).to.equal(person1);
-            });
-            it('should return a monad with a value when searching for first name', () => {
-                expect(person1Maybe.path('firstName').isNothing()).to.equal(false);
-                expect(person1Maybe.props('firstName').isNothing()).to.equal(false);
-                expect(person1Maybe.prop('firstName').isNothing()).to.equal(false);
-            });
-            it('should return a monad with an undefined value when searching for address', () => {
-                expect(person1Maybe.path('address').isNothing()).to.equal(true);
-                expect(person1Maybe.props('address').isNothing()).to.equal(true);
-                expect(person1Maybe.prop('address').isNothing()).to.equal(true);
-            });
-            it('should return a monad with an undefined value when searching for street address', () => {
-                expect(person1Maybe.path('address.street').isNothing()).to.equal(true);
-                expect(person1Maybe.props('address', 'street').isNothing()).to.equal(true);
-                expect(person1Maybe.prop('address').prop('street').isNothing()).to.equal(true);
-            });
-            it('should return the orElse value when searching for street address', () => {
-                const OR_ELSE_VALUE = 'No Address';
-                expect(person1Maybe.path('address.street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
-                expect(person1Maybe.props('address', 'street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
-                expect(person1Maybe.prop('address').prop('street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
-            });
-        });
-        describe('Person 2', () => {
-            let person2;
-            let person2Maybe;
-            beforeEach(() => {
-                // More data, empty address
-                person2 = { firstName: 'Person', lastName: 'Two', address: {} };
-                person2Maybe = Maybe.of(person2);
-            });
-            it('should return a monad containing the person object', () => {
-                expect(person2Maybe.isJust).to.exist;
-                expect(person2Maybe.isJust()).to.be.true;
-                expect(person2Maybe.join()).to.equal(person2);
-            });
-            it('should return a monad with a value when searching for first name', () => {
-                expect(person2Maybe.path('firstName').isNothing()).to.equal(false);
-                expect(person2Maybe.props('firstName').isNothing()).to.equal(false);
-                expect(person2Maybe.prop('firstName').isNothing()).to.equal(false);
-            });
-            it('should return a monad with a value when searching for address', () => {
-                // path check
-                expect(person2Maybe.path('address').isNothing()).to.equal(false);
-                expect(person2Maybe.path('address').join()).to.equal(person2.address);
-
-                // props check
-                expect(person2Maybe.props('address').isNothing()).to.equal(false);
-                expect(person2Maybe.props('address').join()).to.equal(person2.address);
-
-                // prop check
-                expect(person2Maybe.prop('address').isNothing()).to.equal(false);
-                expect(person2Maybe.prop('address').join()).to.equal(person2.address);
-            });
-            it('should return a monad with an undefined value searching for street address', () => {
-                expect(person2Maybe.path('address.street').isNothing()).to.equal(true);
-                expect(person2Maybe.props('address', 'street').isNothing()).to.equal(true);
-                expect(person2Maybe.prop('address').prop('street').isNothing()).to.equal(true);
-            });
-            it('should return the orElse value when searching for street address', () => {
-                const OR_ELSE_VALUE = 'No Address';
-                expect(person2Maybe.path('address.street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
-                expect(person2Maybe.props('address', 'street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
-                expect(person2Maybe.prop('address').prop('street').orElse(OR_ELSE_VALUE).join()).to.equal(OR_ELSE_VALUE);
-            });
-        });
-        describe('Person 3', () => {
-            let person3;
-            let person3Maybe;
-            beforeEach(() => {
-                // Lots of data
-                person3 = {
-                    firstName: 'Person',
-                    lastName : 'Three',
-                    address  : {
-                        street: '123 Main St',
-                        state : 'OR',
-                        zip   : '12345'
-                    }
-                };
-                person3Maybe = Maybe.of(person3);
-            });
-            it('should return a monad containing the person object', () => {
-                expect(person3Maybe.isJust).to.exist;
-                expect(person3Maybe.isJust()).to.be.true;
-                expect(person3Maybe.join()).to.equal(person3);
-            });
-            it('should return a monad with a value when searching for first name', () => {
-                expect(person3Maybe.path('firstName').isNothing()).to.equal(false);
-                expect(person3Maybe.props('firstName').isNothing()).to.equal(false);
-                expect(person3Maybe.prop('firstName').isNothing()).to.equal(false);
-            });
-            it('should return a monad with a value when searching for address', () => {
-                expect(person3Maybe.path('address').isNothing()).to.equal(false);
-                expect(person3Maybe.props('address').isNothing()).to.equal(false);
-                expect(person3Maybe.prop('address').isNothing()).to.equal(false);
-            });
-            it('should return a monad with an value searching for street address', () => {
-                // path check
-                expect(person3Maybe.path('address.street').isNothing()).to.equal(false);
-                expect(person3Maybe.path('address.street').join()).to.equal(person3.address.street);
-
-                // props check
-                expect(person3Maybe.props('address', 'street').isNothing()).to.equal(false);
-                expect(person3Maybe.props('address', 'street').join()).to.equal(person3.address.street);
-
-                // prop check
-                expect(person3Maybe.prop('address').prop('street').isNothing()).to.equal(false);
-                expect(person3Maybe.prop('address').prop('street').join()).to.equal(person3.address.street);
-            });
-            it('should not return the orElse value when searching for street address', () => {
-                const OR_ELSE_VALUE = 'No Address';
-                expect(person3Maybe.path('address.street').orElse(OR_ELSE_VALUE).join()).to.not.equal(OR_ELSE_VALUE);
-                expect(person3Maybe.props('address', 'street').orElse(OR_ELSE_VALUE).join()).to.not.equal(OR_ELSE_VALUE);
-                expect(person3Maybe.prop('address').prop('street').orElse(OR_ELSE_VALUE).join()).to.not.equal(OR_ELSE_VALUE);
             });
         });
     });
