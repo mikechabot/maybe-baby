@@ -36,6 +36,10 @@ describe('maybe-baby', () => {
                 expect(testMaybe.__value).to.equal(testType.value);
             });
         });
+        it(`should return a monad when passed an function with direct object access`, () => {
+            // const testMaybe = Maybe.of();
+            // expect(testMaybe.__value).to.equal(testType.value);
+        });
     });
     describe('Monad functions', () => {
         let NULL_UNDEFINED_VALUES;
@@ -46,7 +50,7 @@ describe('maybe-baby', () => {
         });
         describe('join()', () => {
             it('should return the value of __value (unchecked)', () => {
-                [...NULL_UNDEFINED_VALUES, ...VALID_TEST_VALUES].forEach(testValue => {
+                [].concat(NULL_UNDEFINED_VALUES, VALID_TEST_VALUES).forEach(testValue => {
                     const testMaybe = Maybe.of(testValue);
                     expect(testMaybe.__value).to.equal(testValue);
                     expect(testMaybe.join()).to.equal(testValue);
