@@ -66,6 +66,8 @@ function getZipCode(person) {
 
 ### <a name="usage#of">of</a>
 
+##### Values
+
 `of` accepts a value of any type, and stores it as the monad's value. A monad is returned.
 
 ```javascript
@@ -77,6 +79,8 @@ Maybe.of([]);         // array
 Maybe.of(null);       // null
 Maybe.of(undefined);  // undefined
 ```
+
+#### Functions
 
 If a function is passed, the result will be passed as the monad's value. However, if the function throws an `error`, the monad's value is set to `undefined`.
 
