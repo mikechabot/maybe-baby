@@ -63,6 +63,33 @@ function getZipCode(person) {
 }
 ```
 
+### <a name="usage#of">of</a>
+
+`of` will accept any type, and store it as the monad's value. 
+
+```javascript
+Maybe.of('foo');      // string
+Maybe.of(123);        // number
+Maybe.of(true);       // boolean
+Maybe.of({});         // object
+Maybe.of([]);         // array
+Maybe.of(null);       // null
+Maybe.of(undefined);  // undefined
+```
+
+If a function is passed, the result will be passed as the monad's value. However, if the function throws an `error`, the monad's value is set to `undefined`.
+
+```javascript
+const person = {
+    accountDetails: {
+        address: null
+    }
+};
+
+const zipCode = Maybe.of(() => person.accountDetails.address.zipCode);
+zipCode.join();   // undefined
+```
+
 ### <a name="usage#isJust">isJust, isNothing</a>
 
 Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
