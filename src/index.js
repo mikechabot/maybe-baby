@@ -24,14 +24,12 @@ const Maybe = function Maybe (val) {
  * @returns {Maybe} A Maybe monad
  */
 Maybe.of = function (val) {
-    if (typeof val === 'function') {
-        try {
-            return Maybe.of(val());
-        } catch (error) {
-            return Maybe.of(undefined);
-        }
-    } else {
-        return new Maybe(val);
+    try {
+        return new Maybe(
+            typeof val === 'function' ? val() : val
+        );
+    } catch (error) {
+        return new Maybe(undefined);
     }
 };
 
