@@ -19,11 +19,20 @@ const Maybe = function Maybe (val) {
  *      baz: [1,2,3]
  * };
  *
- * const myMaybe = Maybe.of(exampleObj);
+ * const maybe1 = Maybe.of(exampleObj);
+ * const maybe2 = Maybe.of(() => exampleObj.baz.1);
  * @returns {Maybe} A Maybe monad
  */
 Maybe.of = function (val) {
-    return new Maybe(val);
+    if (typeof val === 'function') {
+        try {
+            return Maybe.of(val());
+        } catch (error) {
+            return Maybe.of(undefined);
+        }
+    } else {
+        return new Maybe(val);
+    }
 };
 
 /**

@@ -36,9 +36,15 @@ describe('maybe-baby', () => {
                 expect(testMaybe.__value).to.equal(testType.value);
             });
         });
-        it(`should return a monad when passed an function with direct object access`, () => {
-            // const testMaybe = Maybe.of();
-            // expect(testMaybe.__value).to.equal(testType.value);
+        it('should return a monad when passed an function with direct object access (defined)', () => {
+            const foo = { bar: { baz: [1, 2, 3] }};
+            const testMaybe = Maybe.of(() => foo.bar.baz[0]);
+            expect(testMaybe.__value).to.equal(1);
+        });
+        it('should return a monad when passed an function with direct object access (undefined)', () => {
+            const foo = {};
+            const testMaybe = Maybe.of(() => foo.bar.baz[0]);
+            expect(testMaybe.__value).to.equal(undefined);
         });
     });
     describe('Monad functions', () => {
