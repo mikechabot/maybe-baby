@@ -13,7 +13,7 @@ const Maybe = function Maybe (val) {
 
 /**
  * Public constructor. Creates an instance of Maybe.
- * @param val {*} Object, string, or number
+ * @param val {*} Object, string, number, or function (direct object access)
  * @example const exampleObj = {
  *      foo: 'bar',
  *      baz: [1,2,3]
