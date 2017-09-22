@@ -66,7 +66,7 @@ function getZipCode(person) {
 
 ### <a name="usage#of">of</a>
 
-`of` will accept any type, and store it as the monad's value. 
+`of` accepts a value of any type, and stores it as the monad's value. A monad is returned.
 
 ```javascript
 Maybe.of('foo');      // string
