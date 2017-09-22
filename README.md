@@ -15,6 +15,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
 
 - [Docs](#docs)
 - [API](#api)
+  - [of](#of)
   - [isJust, isNothing](#isjust-isnothing)
   - [path, prop, props](#path-prop-props)
   - [map](#mapfunc)
