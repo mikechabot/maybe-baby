@@ -44,6 +44,7 @@ const person = {
   }
 };
 ```
+
 It looks like we're missing the `address` attribute on the `accountDetails` object. That's too bad since we're in a situation where we need the `zipCode` of the `person`, which lives on the `address`. Accessing it via dot notation will result in a `TypeError` (i.e. `person.accountDetails.address.zipCode`). 
 
 One way to solve the problem is to write in some null checks, but that doesn't scale well. Another would be to use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs may have larger footprints than `maybe-baby`, and most likely wouldn't be implementing the monadic structure.
@@ -142,7 +143,8 @@ const three = Maybe.of(1)
 
 ## <a name="maybe-baby#usage">Example Usage</a>
 
-1. Some object with an arbitrary shape:
+1. Some object with an arbitrary shape.
+
 ```javascript
 const person = {
     firstName     : 'John',
@@ -154,7 +156,8 @@ const person = {
 };
 ```
 
-2. Example domain service that implements `maybe-baby` (`chain` and `prop`) to safely retrieve values from an object:
+2. Example domain service that implements `maybe-baby` (`chain` and `prop`) to safely retrieve values from an object.
+
 ```javascript
 
 const FLAT_PROPS = {
@@ -205,7 +208,8 @@ const PersonService = svc = {
 };
 ```
 
-3. Usage of service:
+3. Get monad-wrapped values from service.
+
 ```javascript
 const firstName = PersonService.getFirsName(person);
 const lastName = PersonService.getLastName(person);
@@ -215,7 +219,8 @@ const address = PersonService.getAddress(person);
 const zipCode = PersonService.getZipCode(person);
 ```
 
-4. Get values from the Maybes:
+4. Get values from the Maybes.
+
 ```javascript
 firstName.join();      // 'John'
 lastName.join();       // null
