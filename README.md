@@ -139,7 +139,7 @@ maybeObj.path('foo.bar').join();    // [123, 456]
 maybeObj.path('foo.bar.1').join();  // 456
 ```
 
-#### `path(<string|number>)`
+#### `props(<string|number>)`
 ```javascript
 maybeObj.props('foo').join();           // { bar: [123, 456] }
 maybeObj.props('foo', 'bar').join();    // [123, 456]
