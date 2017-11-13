@@ -147,7 +147,7 @@ const maybeObj = Maybe.of(someDeepObj);</code></pre><h4><code>prop(&lt;string|nu
 maybeObj.prop('foo').prop('bar').join();           // [123, 456]
 maybeObj.prop('foo').prop('bar').prop(1).join();   // 456</code></pre><h4><code>path(&lt;string&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.path('foo').join();        // { bar: [123, 456] }
 maybeObj.path('foo.bar').join();    // [123, 456]
-maybeObj.path('foo.bar.1').join();  // 456</code></pre><h4><code>path(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.props('foo').join();           // { bar: [123, 456] }
+maybeObj.path('foo.bar.1').join();  // 456</code></pre><h4><code>props(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.props('foo').join();           // { bar: [123, 456] }
 maybeObj.props('foo', 'bar').join();    // [123, 456]
 maybeObj.props('foo', 'bar', 1).join(); // 456</code></pre><h3><a name="map">map(func)</a></h3><p>Apply a transformation to the monad, and return a new monad:</p>
 <pre class="prettyprint source lang-javascript"><code>const val = 1;
