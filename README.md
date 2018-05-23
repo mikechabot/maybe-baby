@@ -64,7 +64,7 @@ It looks like we're missing the `address` attribute on the `accountDetails` obje
 
 How does that work? Let's find out -- and rememeber, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError` when trying to access the properties of an undefined object.
 
-```javascript
+```js
 import Maybe from 'maybe-baby';
 
 // Short-circuit and return undefined if any errors are thrown
@@ -82,6 +82,7 @@ Can we make that more succinct?
 // Short-circuit and return undefined if any errors are thrown
 function getZipCode(person) {
   return Maybe.of(() => person.accountDetails.address.zipCode).join();
+}
 ```
 
 ----
@@ -149,8 +150,9 @@ aVal.isJust();     // true
 
 ### <a name="usage#props">path, prop, props</a>
 
-* Use `path`, `props`, or `prop` to get values at arbitrary depths
-* These functions share the same purpose: to return value the specified path/location (wrapped in a monad), however they each do it a bit differently. Keep in mind, these functions are chainable:
+* Use `path`, `props`, or `prop` to get values at arbitrary depths.
+* Each functions identically to the others; they only differ in their input parameters.
+* As with every monadic function, they are chainable.
 
 | Function | Description | Example 
 | ----- | ---- | ----------- |
@@ -184,6 +186,8 @@ maybeObj.props('foo', 'bar').join();    // [123, 456]
 maybeObj.props('foo', 'bar', 1).join(); // 456
 ```
 
+----
+
 ### <a name="usage#map">map(func)</a>
 
 Apply a transformation to the monad, and return a new monad:
@@ -194,6 +198,8 @@ const newVal = Maybe.of(val).map(val => val + 1);
 
 newVal.join(); // 2;
 ```
+
+----
 
 ### <a name="usage#chain">chain(func)</a>
 
