@@ -49,6 +49,8 @@ const user = {
 };
 ```
 
+**Problem**
+
 It looks like we're missing the `address` attribute on the `accountDetails` object. That's too bad since we're in a situation where we need the `zipCode`, which happens to live on the `address`. Accessing it via dot notation (`person.accountDetails.address.zipCode`) will result in a `TypeError`. 
 
 **Solutions?**
