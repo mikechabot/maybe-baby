@@ -28,13 +28,6 @@
 </nav>
 
 <div id="main">
-    
-
-    
-
-
-
-    
 
 
 
@@ -44,7 +37,14 @@
 
 
 
-    
+
+
+
+
+
+
+
+
 
 
     <section class="readme">
@@ -58,46 +58,74 @@
 <h1>maybe-baby</h1><p><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">Maybe monad</a> implemented in JavaScript.
 Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</p>
 <ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#docs">Docs</a></li>
 <li><a href="#api">API</a><ul>
 <li><a href="#of">of</a></li>
-<li><a href="#isjust">isJust, isNothing</a></li>
-<li><a href="#path">path, prop, props</a></li>
-<li><a href="#map">map</a></li>
-<li><a href="#chain">chain</a></li>
+<li><a href="#isjust-isnothing">isJust, isNothing</a></li>
+<li><a href="#path-prop-props">path, prop, props</a></li>
+<li><a href="#mapfunc">map</a></li>
+<li><a href="#chainfunc">chain</a></li>
 </ul>
 </li>
-<li><a href="#example">Example Usage</a></li>
-<li><a href="#installation">Installation</a></li>
+<li><a href="#example-usage">Example Usage</a></li>
 </ul>
-<h2><a name="api">API</a></h2><p>When data is unreliable, minimize defensive coding with <code>maybe-baby</code> :</p>
-<pre class="prettyprint source lang-javascript"><code>// Some data with missing values: no last name, no address
-const person = { 
-  name: {
-    first: 'John',
-    last : null
-  },
+<h2><a name="maybe-baby#installation">Installation</a></h2><p>Install with yarn or npm:</p>
+<ul>
+<li><code>$ npm install --save maybe-baby</code></li>
+<li><code>$ yarn add maybe-baby</code></li>
+</ul>
+<hr>
+<h2><a name="maybe-baby#getting-started">Getting Started</a></h2><p>When data is unreliable, minimize defensive coding with <code>maybe-baby</code> :</p>
+<pre class="prettyprint source lang-javascript"><code>// Domain object with NULL address
+const user = {
+  email: 'foo@bar.com'
   accountDetails: {
-    insuranceCode: 'BDX2321'
+    type: 'employee',
+    insuranceCode: 'BDX2321',
+    address: null
   }
-};</code></pre><p>It looks like we're missing the <code>address</code> attribute on the <code>accountDetails</code> object. That's too bad since we're in a situation where we need the <code>zipCode</code> of the <code>person</code>, which lives on the <code>address</code>. Accessing it via dot notation will result in a <code>TypeError</code> (i.e. <code>person.accountDetails.address.zipCode</code>). </p>
-<p>One way to solve the problem is to write in some null checks, but that doesn't scale well. Another would be to use <a href="https://lodash.com/docs/4.17.4#get"><code>_.get()</code></a> or something similar, but these libs may have larger footprints than <code>maybe-baby</code>, and most likely wouldn't be implementing the monadic structure.</p>
-<p>Anyway, let's safely get the zip code. Although we're attempting to access properties on an undefined object, with <code>maybe-baby</code>, we're guaranteed to never encounter a <code>TypeError</code>:</p>
-<pre class="prettyprint source lang-javascript"><code>import Maybe from 'maybe-baby';
+};</code></pre><p><strong>Problem</strong></p>
+<p>It looks like we're missing the <code>address</code> attribute on the <code>accountDetails</code> object. That's too bad since we're in a situation where we need the <code>zipCode</code>, which happens to live on the <code>address</code>. Accessing it via dot notation (<code>person.accountDetails.address.zipCode</code>) will result in a <code>TypeError</code>. </p>
+<p><strong>Solutions?</strong></p>
+<ol>
+<li>Write some null checks, but that doesn't scale well, and is ugly.</li>
+<li>Use <a href="https://lodash.com/docs/4.17.4#get"><code>_.get()</code></a> or something similar, but these libs can have large footprints, and most likely won't be implementing the monadic structure.</li>
+</ol>
+<p><strong>A better aproach?</strong></p>
+<ol>
+<li>The Maybe monad.</li>
+</ol>
+<p>How does that work? Let's find out -- and rememeber, with <code>maybe-baby</code>, we're <strong>guaranteed</strong> to never encounter a <code>TypeError</code> when trying to access the properties of an <code>undefined</code> object.</p>
+<pre class="prettyprint source lang-js"><code>import Maybe from 'maybe-baby';
 
+// Short-circuit and return undefined if any errors are thrown
 function getZipCode(person) {
   return Maybe.of(person)
     .prop('accountDetails')
     .prop('address')
     .prop('zipCode')
     .join();
-}</code></pre><h3><a name="of">of</a></h3><p><code>of</code> accepts a value of any type, and stores it as the monad's value. A monad is returned.</p>
+}</code></pre><p>Can we make that more succinct?</p>
+<pre class="prettyprint source lang-js"><code>// Short-circuit and return undefined if any errors are thrown
+function getZipCode(person) {
+  return Maybe.of(() => person.accountDetails.address.zipCode).join();
+}</code></pre><hr>
+<h2><a name="maybe-baby#docs">Docs</a></h2><p>Documentation generated via <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a>.</p>
+<ul>
+<li><a href="https://mikechabot.github.io/maybe-baby/">https://mikechabot.github.io/maybe-baby/</a></li>
+</ul>
+<hr>
+<h2><a name="maybe-baby#api">API</a></h2><p>There's lots of ways to access your data using <code>maybe-baby</code>. Check out the API below or the complete <a href="https://mikechabot.github.io/maybe-baby/">documentation</a>.</p>
+<h3><a name="usage#of">of</a></h3><h5>Values</h5><p><code>of</code> accepts a value of any type, and stores it as the monad's value. A monad is returned.</p>
 <pre class="prettyprint source lang-javascript"><code>Maybe.of('foo');      // string
 Maybe.of(123);        // number
 Maybe.of(true);       // boolean
 Maybe.of({});         // object
 Maybe.of([]);         // array
 Maybe.of(null);       // null
-Maybe.of(undefined);  // undefined</code></pre><p>If a function is passed, the result will be passed as the monad's value. However, if the function throws an <code>error</code>, the monad's value is set to <code>undefined</code>.</p>
+Maybe.of(undefined);  // undefined</code></pre><h4>Functions</h4><p>If a function is passed, the result will be passed as the monad's value. However, if the function throws an <code>error</code>, the monad's value is set to <code>undefined</code>.</p>
 <pre class="prettyprint source lang-javascript"><code>const person = {
     accountDetails: {
         address: null
@@ -105,16 +133,19 @@ Maybe.of(undefined);  // undefined</code></pre><p>If a function is passed, the r
 };
 
 const zipCode = Maybe.of(() => person.accountDetails.address.zipCode);
-zipCode.join();   // undefined</code></pre><h3><a name="isjust">isJust, isNothing</a></h3><p>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></p>
+zipCode.join();   // undefined</code></pre><hr>
+<h3><a name="usage#isJust">isJust, isNothing</a></h3><p>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></p>
 <pre class="prettyprint source lang-javascript"><code>const noVal = Maybe.of(null);
 noVal.isNothing();  // true
 noVal.isJust();     // false
 
 const aVal = Maybe.of(123);
 aVal.isNothing();  // false
-aVal.isJust();     // true</code></pre><h3><a name="path">path, prop, props</a></h3><ul>
-<li>Use <code>path</code>, <code>props</code>, or <code>prop</code> to get values at arbitrary depths</li>
-<li>These functions share the same purpose: to return value the specified path/location (wrapped in a monad), however they each do it a bit differently. Keep in mind, these functions are chainable:</li>
+aVal.isJust();     // true</code></pre><hr>
+<h3><a name="usage#props">path, prop, props</a></h3><ul>
+<li>Use <code>path</code>, <code>props</code>, or <code>prop</code> to get values at arbitrary depths.</li>
+<li>Each functions identically to the others; they only differ in their input parameters.</li>
+<li>As with every monadic function, they are chainable.</li>
 </ul>
 <table>
 <thead>
@@ -149,11 +180,13 @@ maybeObj.prop('foo').prop('bar').prop(1).join();   // 456</code></pre><h4><code>
 maybeObj.path('foo.bar').join();    // [123, 456]
 maybeObj.path('foo.bar.1').join();  // 456</code></pre><h4><code>props(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.props('foo').join();           // { bar: [123, 456] }
 maybeObj.props('foo', 'bar').join();    // [123, 456]
-maybeObj.props('foo', 'bar', 1).join(); // 456</code></pre><h3><a name="map">map(func)</a></h3><p>Apply a transformation to the monad, and return a new monad:</p>
+maybeObj.props('foo', 'bar', 1).join(); // 456</code></pre><hr>
+<h3><a name="usage#map">map(func)</a></h3><p>Apply a transformation to the monad, and return a new monad:</p>
 <pre class="prettyprint source lang-javascript"><code>const val = 1;
 const newVal = Maybe.of(val).map(val => val + 1);
 
-newVal.join(); // 2;</code></pre><h3><a name="chain">chain(func)</a></h3><p>Chain together functions that return Maybe monads:</p>
+newVal.join(); // 2;</code></pre><hr>
+<h3><a name="usage#chain">chain(func)</a></h3><p>Chain together functions that return Maybe monads:</p>
 <pre class="prettyprint source lang-javascript"><code>function addOne (val) {
   return Maybe.of(val + 1);
 }
@@ -162,7 +195,8 @@ const three = Maybe.of(1)
  .chain(addOne)
  .chain(addOne);
 
- three.join(); // 3</code></pre><h2><a name="example">Example Usage</a></h2><ol>
+ three.join(); // 3</code></pre><hr>
+<h2><a name="maybe-baby#usage">Example Usage</a></h2><ol>
 <li>Some object with an arbitrary shape.</li>
 </ol>
 <pre class="prettyprint source lang-javascript"><code>const person = {
@@ -237,11 +271,7 @@ lastName.join();       // null
 accountDetails.join(); // { insuranceCode: 'BDX2321', address: null }
 insuranceCode.join();  // 'BDX2321'
 address.join();        // null
-zipCode.join();        // undefined</code></pre><h2><a name="installation">Installation</a></h2><p>Install with yarn or npm:</p>
-<ul>
-<li><code>$ npm install --save maybe-baby</code></li>
-<li><code>$ yarn add maybe-baby</code></li>
-</ul></article>
+zipCode.join();        // undefined</code></pre></article>
     </section>
 
 
@@ -254,7 +284,7 @@ zipCode.join();        // undefined</code></pre><h2><a name="installation">Insta
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 21 2017 22:32:07 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 23 2018 12:29:54 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
