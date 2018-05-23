@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm run clear && npm run compile",
     "test": "nyc mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "generate-docs": "node_modules/.bin/jsdoc -c ./.jsdoc.json -t ./node_modules/minami/ README.md ./src/index.js",
     "compile": "babel src -d lib",
     "clear": "rm -rf ./lib"
