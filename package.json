@@ -1,6 +1,6 @@
 {
   "name": "maybe-baby",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Maybe monad for JavaScript",
   "author": "Mike Chabot",
   "license": "MIT",
