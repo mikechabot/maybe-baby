@@ -13,6 +13,8 @@
 `maybe-baby` is the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad) implemented in JavaScript. 
 Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-read blogpost [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
+- [Installation](#installation)
+- [Getting Started](#getting-started)
 - [Docs](#docs)
 - [API](#api)
   - [of](#of)
@@ -21,15 +23,17 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
   - [map](#mapfunc)
   - [chain](#chainfunc)
 - [Example Usage](#example-usage)
-- [Installation](#installation)
 
-## <a name="maybe-baby#docs">Docs</a>
+## <a name="maybe-baby#installation">Installation</a>
 
-Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
+Install with yarn or npm:
 
-* https://mikechabot.github.io/maybe-baby/
+* `$ npm install --save maybe-baby`
+* `$ yarn add maybe-baby`
 
-## <a name="maybe-baby#api">API</a>
+---
+
+## <a name="maybe-baby#getting-started">Getting Started</a>
 
 When data is unreliable, minimize defensive coding with `maybe-baby` :
 
@@ -61,7 +65,7 @@ Anyway, let's safely get the `zipCode`. With `maybe-baby`, we're **guaranteed** 
 ```javascript
 import Maybe from 'maybe-baby';
 
-// Returns undefined if the zipCode is not present
+// Short-circuit and return undefined if any errors are thrown
 function getZipCode(person) {
   return Maybe.of(person)
     .prop('accountDetails')
@@ -73,15 +77,25 @@ function getZipCode(person) {
 Can we make that more succinct?
 
 ```js
-// Returns undefined if the zipCode is not present
+// Short-circuit and return undefined if any errors are thrown
 function getZipCode(person) {
   return Maybe.of(() => person.accountDetails.address.zipCode)
-    .join(); // -> undefined
+    .join();
 ```
 
-There's lots of ways to access your data using `maybe-baby` check out the [API](https://github.com/mikechabot/maybe-baby#api) for details.
-
 ----
+
+## <a name="maybe-baby#docs">Docs</a>
+
+Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
+
+* https://mikechabot.github.io/maybe-baby/
+
+---
+
+## <a name="maybe-baby#api">API</a>
+
+There's lots of ways to access your data using `maybe-baby`. Check out the API below or the complete [documentation](https://mikechabot.github.io/maybe-baby/).
 
 ### <a name="usage#of">of</a>
 
@@ -286,10 +300,3 @@ insuranceCode.join();  // 'BDX2321'
 address.join();        // null
 zipCode.join();        // undefined
 ```
-
-## <a name="maybe-baby#installation">Installation</a>
-
-Install with yarn or npm:
-
-* `$ npm install --save maybe-baby`
-* `$ yarn add maybe-baby`
