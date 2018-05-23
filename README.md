@@ -81,8 +81,7 @@ Can we make that more succinct?
 ```js
 // Short-circuit and return undefined if any errors are thrown
 function getZipCode(person) {
-  return Maybe.of(() => person.accountDetails.address.zipCode)
-    .join();
+  return Maybe.of(() => person.accountDetails.address.zipCode).join();
 ```
 
 ----
