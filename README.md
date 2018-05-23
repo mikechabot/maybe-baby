@@ -25,7 +25,7 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
 
 ## <a name="maybe-baby#docs">Docs</a>
 
-Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc) with the [minami template](https://github.com/nijikokun/minami).
+Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
 * https://mikechabot.github.io/maybe-baby/
 
@@ -34,27 +34,34 @@ Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc) with the [m
 When data is unreliable, minimize defensive coding with `maybe-baby` :
 
 ```javascript
-// Some data with missing values: no last name, no address
-const person = { 
-  name: {
-    first: 'John',
-    last : null
-  },
+// Domain object with NULL address
+const user = { 
+  email: 'foo@bar.com'
   accountDetails: {
-    insuranceCode: 'BDX2321'
+    type: 'employee',
+    insuranceCode: 'BDX2321',
+    address: null
   }
 };
 ```
 
-It looks like we're missing the `address` attribute on the `accountDetails` object. That's too bad since we're in a situation where we need the `zipCode` of the `person`, which lives on the `address`. Accessing it via dot notation will result in a `TypeError` (i.e. `person.accountDetails.address.zipCode`). 
+It looks like we're missing the `address` attribute on the `accountDetails` object. That's too bad since we're in a situation where we need the `zipCode`, which happens to live on the `address`. Accessing it via dot notation (`person.accountDetails.address.zipCode`) will result in a `TypeError`. 
 
-One way to solve the problem is to write in some null checks, but that doesn't scale well. Another would be to use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs may have larger footprints than `maybe-baby`, and most likely wouldn't be implementing the monadic structure.
+**Solutions?**
 
-Anyway, let's safely get the zip code. Although we're attempting to access properties on an undefined object, with `maybe-baby`, we're guaranteed to never encounter a `TypeError`:
+1. Write some null checks, but that doesn't scale well, and is ugly.
+2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs can have large footprints, and most likely won't be implementing the monadic structure.
+
+**A better aproach?**
+
+1. The Maybe monad.
+
+Anyway, let's safely get the `zipCode`. With `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`, even though we're trying to access properties on an undefined object.
 
 ```javascript
 import Maybe from 'maybe-baby';
 
+// Returns undefined if the zipCode is not present
 function getZipCode(person) {
   return Maybe.of(person)
     .prop('accountDetails')
@@ -63,6 +70,18 @@ function getZipCode(person) {
     .join();
 }
 ```
+Can we make that more succinct?
+
+```js
+// Returns undefined if the zipCode is not present
+function getZipCode(person) {
+  return Maybe.of(() => person.accountDetails.address.zipCode)
+    .join(); // -> undefined
+```
+
+There's lots of ways to access your data using `maybe-baby` check out the [API](https://github.com/mikechabot/maybe-baby#api) for details.
+
+----
 
 ### <a name="usage#of">of</a>
 
@@ -95,6 +114,8 @@ const zipCode = Maybe.of(() => person.accountDetails.address.zipCode);
 zipCode.join();   // undefined
 ```
 
+----
+
 ### <a name="usage#isJust">isJust, isNothing</a>
 
 Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
@@ -108,6 +129,8 @@ const aVal = Maybe.of(123);
 aVal.isNothing();  // false
 aVal.isJust();     // true
 ```
+
+----
 
 ### <a name="usage#props">path, prop, props</a>
 
@@ -172,6 +195,8 @@ const three = Maybe.of(1)
 
  three.join(); // 3
 ```
+
+----
 
 ## <a name="maybe-baby#usage">Example Usage</a>
 
