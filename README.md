@@ -62,7 +62,7 @@ It looks like we're missing the `address` attribute on the `accountDetails` obje
 
 1. The Maybe monad.
 
-Anyway, let's safely get the `zipCode`. With `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`, even though we're trying to access properties on an undefined object.
+How does that work? Let's find out -- and rememeber, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError` when trying to access properties on an undefined object.
 
 ```javascript
 import Maybe from 'maybe-baby';
