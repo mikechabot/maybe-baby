@@ -62,7 +62,7 @@ It looks like we're missing the `address` attribute on the `accountDetails` obje
 
 1. The Maybe monad.
 
-How does that work? Let's find out -- and rememeber, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError` when trying to access the properties of an undefined object.
+How does that work? Let's find out -- and rememeber, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError` when trying to access the properties of an `undefined` object.
 
 ```js
 import Maybe from 'maybe-baby';
