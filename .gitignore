@@ -8,8 +8,10 @@ pids
 *.pid
 *.seed
 
-# Coverage directory used by tools like istanbul
-coverage
+# Coverage
+.nyc-coverage/*
+.nyc-coverage-temp/*
+
 
 # Dependency directories
 node_modules
