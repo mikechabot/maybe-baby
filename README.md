@@ -13,6 +13,8 @@
 `maybe-baby` is the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad) implemented in JavaScript. 
 Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-read blogpost [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
+- [Installation](#installation)
+- [Getting Started](#getting-started)
 - [Docs](#docs)
 - [API](#api)
   - [of](#of)
@@ -21,40 +23,51 @@ Credit to [James Sinclair](https://github.com/jrsinclair) for writing the must-r
   - [map](#mapfunc)
   - [chain](#chainfunc)
 - [Example Usage](#example-usage)
-- [Installation](#installation)
 
-## <a name="maybe-baby#docs">Docs</a>
+## <a name="maybe-baby#installation">Installation</a>
 
-Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc) with the [minami template](https://github.com/nijikokun/minami).
+Install with yarn or npm:
 
-* https://mikechabot.github.io/maybe-baby/
+* `$ npm install --save maybe-baby`
+* `$ yarn add maybe-baby`
 
-## <a name="maybe-baby#api">API</a>
+---
+
+## <a name="maybe-baby#getting-started">Getting Started</a>
 
 When data is unreliable, minimize defensive coding with `maybe-baby` :
 
 ```javascript
-// Some data with missing values: no last name, no address
-const person = { 
-  name: {
-    first: 'John',
-    last : null
-  },
+// Domain object with NULL address
+const user = { 
+  email: 'foo@bar.com'
   accountDetails: {
-    insuranceCode: 'BDX2321'
+    type: 'employee',
+    insuranceCode: 'BDX2321',
+    address: null
   }
 };
 ```
 
-It looks like we're missing the `address` attribute on the `accountDetails` object. That's too bad since we're in a situation where we need the `zipCode` of the `person`, which lives on the `address`. Accessing it via dot notation will result in a `TypeError` (i.e. `person.accountDetails.address.zipCode`). 
+**Problem**
 
-One way to solve the problem is to write in some null checks, but that doesn't scale well. Another would be to use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs may have larger footprints than `maybe-baby`, and most likely wouldn't be implementing the monadic structure.
+It looks like we're missing the `address` attribute on the `accountDetails` object. That's too bad since we're in a situation where we need the `zipCode`, which happens to live on the `address`. Accessing it via dot notation (`person.accountDetails.address.zipCode`) will result in a `TypeError`. 
 
-Anyway, let's safely get the zip code. Although we're attempting to access properties on an undefined object, with `maybe-baby`, we're guaranteed to never encounter a `TypeError`:
+**Solutions?**
 
-```javascript
+1. Write some null checks, but that doesn't scale well, and is ugly.
+2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs can have large footprints, and most likely won't be implementing the monadic structure.
+
+**A better aproach?**
+
+1. The Maybe monad.
+
+How does that work? Let's find out -- and rememeber, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError` when trying to access the properties of an `undefined` object.
+
+```js
 import Maybe from 'maybe-baby';
 
+// Short-circuit and return undefined if any errors are thrown
 function getZipCode(person) {
   return Maybe.of(person)
     .prop('accountDetails')
@@ -63,6 +76,28 @@ function getZipCode(person) {
     .join();
 }
 ```
+Can we make that more succinct?
+
+```js
+// Short-circuit and return undefined if any errors are thrown
+function getZipCode(person) {
+  return Maybe.of(() => person.accountDetails.address.zipCode).join();
+}
+```
+
+----
+
+## <a name="maybe-baby#docs">Docs</a>
+
+Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
+
+* https://mikechabot.github.io/maybe-baby/
+
+---
+
+## <a name="maybe-baby#api">API</a>
+
+There's lots of ways to access your data using `maybe-baby`. Check out the API below or the complete [documentation](https://mikechabot.github.io/maybe-baby/).
 
 ### <a name="usage#of">of</a>
 
@@ -95,6 +130,8 @@ const zipCode = Maybe.of(() => person.accountDetails.address.zipCode);
 zipCode.join();   // undefined
 ```
 
+----
+
 ### <a name="usage#isJust">isJust, isNothing</a>
 
 Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
@@ -109,10 +146,13 @@ aVal.isNothing();  // false
 aVal.isJust();     // true
 ```
 
+----
+
 ### <a name="usage#props">path, prop, props</a>
 
-* Use `path`, `props`, or `prop` to get values at arbitrary depths
-* These functions share the same purpose: to return value the specified path/location (wrapped in a monad), however they each do it a bit differently. Keep in mind, these functions are chainable:
+* Use `path`, `props`, or `prop` to get values at arbitrary depths.
+* Each functions identically to the others; they only differ in their input parameters.
+* As with every monadic function, they are chainable.
 
 | Function | Description | Example 
 | ----- | ---- | ----------- |
@@ -146,6 +186,8 @@ maybeObj.props('foo', 'bar').join();    // [123, 456]
 maybeObj.props('foo', 'bar', 1).join(); // 456
 ```
 
+----
+
 ### <a name="usage#map">map(func)</a>
 
 Apply a transformation to the monad, and return a new monad:
@@ -156,6 +198,8 @@ const newVal = Maybe.of(val).map(val => val + 1);
 
 newVal.join(); // 2;
 ```
+
+----
 
 ### <a name="usage#chain">chain(func)</a>
 
@@ -172,6 +216,8 @@ const three = Maybe.of(1)
 
  three.join(); // 3
 ```
+
+----
 
 ## <a name="maybe-baby#usage">Example Usage</a>
 
@@ -261,10 +307,3 @@ insuranceCode.join();  // 'BDX2321'
 address.join();        // null
 zipCode.join();        // undefined
 ```
-
-## <a name="maybe-baby#installation">Installation</a>
-
-Install with yarn or npm:
-
-* `$ npm install --save maybe-baby`
-* `$ yarn add maybe-baby`
