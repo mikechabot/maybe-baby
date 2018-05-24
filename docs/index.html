@@ -55,86 +55,95 @@
 <p><a href="https://nodei.co/npm/maybe-baby/"><img src="https://nodei.co/npm/maybe-baby.png" alt="NPM"></a></p>
 <p><a href="https://github.com/mikechabot/maybe-baby"><img src="https://img.shields.io/github/stars/mikechabot/maybe-baby.svg?style=social&amp;label=Star" alt="GitHub stars"></a>
 <a href="https://github.com/mikechabot/maybe-baby"><img src="https://img.shields.io/github/forks/mikechabot/maybe-baby.svg?style=social&amp;label=Fork" alt="GitHub forks"></a></p>
-<h1>maybe-baby</h1><p><code>maybe-baby</code> is the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">Maybe monad</a> implemented in JavaScript.
-Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing the must-read blogpost <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</p>
+<h1>maybe-baby</h1><p>Minimize defensive coding with <code>maybe-baby</code>. A JavaScript implementation of the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">Maybe monad</a>. </p>
 <ul>
-<li><a href="#installation">Installation</a></li>
+<li><a href="#installing">Installing</a></li>
 <li><a href="#getting-started">Getting Started</a></li>
 <li><a href="#docs">Docs</a></li>
 <li><a href="#api">API</a><ul>
 <li><a href="#of">of</a></li>
 <li><a href="#isjust-isnothing">isJust, isNothing</a></li>
-<li><a href="#path-prop-props">path, prop, props</a></li>
+<li><a href="#props">path, prop, props</a></li>
 <li><a href="#mapfunc">map</a></li>
 <li><a href="#chainfunc">chain</a></li>
 </ul>
 </li>
 <li><a href="#example-usage">Example Usage</a></li>
+<li><a href="#credit">Credit</a></li>
 </ul>
-<h2><a name="maybe-baby#installation">Installation</a></h2><p>Install with yarn or npm:</p>
+<h2><a id="installing">Installing</a></h2><p>Install with yarn or npm:</p>
 <ul>
 <li><code>$ npm install --save maybe-baby</code></li>
 <li><code>$ yarn add maybe-baby</code></li>
 </ul>
 <hr>
-<h2><a name="maybe-baby#getting-started">Getting Started</a></h2><p>When data is unreliable, minimize defensive coding with <code>maybe-baby</code> :</p>
-<pre class="prettyprint source lang-javascript"><code>// Domain object with NULL address
-const user = {
-  email: 'foo@bar.com'
+<h2><a id="getting-started">Getting Started</a></h2><p>Data can be unreliable; often missing important properties. For example, <code>user_1</code> has a <code>null</code> <code>address</code>:</p>
+<pre class="prettyprint source lang-javascript"><code>const user_1 = {
+  email: 'foo@bar.com',
   accountDetails: {
     type: 'employee',
     insuranceCode: 'BDX2321',
     address: null
   }
-};</code></pre><p><strong>Problem</strong></p>
-<p>It looks like we're missing the <code>address</code> attribute on the <code>accountDetails</code> object. That's too bad since we're in a situation where we need the <code>zipCode</code>, which happens to live on the <code>address</code>. Accessing it via dot notation (<code>person.accountDetails.address.zipCode</code>) will result in a <code>TypeError</code>. </p>
-<p><strong>Solutions?</strong></p>
-<ol>
+};</code></pre><p>And <code>user_2</code> is almost completely empty:</p>
+<pre class="prettyprint source lang-javascript"><code>const user_3 = {
+  email: 'qux@bar.com'
+};</code></pre><h3>Problem</h3><p>What if we need the <code>zipCode</code> of each user, which happens to live on the <code>address</code>? Accessing it via dot notation (i.e. <code>user.accountDetails.address.zipCode</code>) will result in a <code>TypeError</code>. </p>
+<h3>Solutions?</h3><ol>
 <li>Write some null checks, but that doesn't scale well, and is ugly.</li>
+</ol>
+<pre class="prettyprint source lang-javascript"><code>// Purposely obnoxious
+function getZipCode(user) {
+  if (user !== null && user !== undefined) {
+    if (user.accountDetails !== null && user.accountDetails !== undefined) {
+      if (user.accountDetails.address !== null && user.accountDetails.address !== undefined) {
+          return user.accountDetails.address.zipCode
+      }
+    }
+  }
+}</code></pre><ol>
 <li>Use <a href="https://lodash.com/docs/4.17.4#get"><code>_.get()</code></a> or something similar, but these libs can have large footprints, and most likely won't be implementing the monadic structure.</li>
 </ol>
-<p><strong>A better aproach?</strong></p>
-<ol>
+<h3>A better approach?</h3><ol>
 <li>The Maybe monad.</li>
 </ol>
-<p>How does that work? Let's find out -- and rememeber, with <code>maybe-baby</code>, we're <strong>guaranteed</strong> to never encounter a <code>TypeError</code> when trying to access the properties of an <code>undefined</code> object.</p>
+<p>How does that work? Let's find out. Keep in mind, regardless of what our data looks like, with <code>maybe-baby</code>, we're <strong>guaranteed</strong> to never encounter a <code>TypeError</code>:</p>
 <pre class="prettyprint source lang-js"><code>import Maybe from 'maybe-baby';
 
 // Short-circuit and return undefined if any errors are thrown
-function getZipCode(person) {
-  return Maybe.of(person)
+function getZipCode(user) {
+  return Maybe.of(user)
     .prop('accountDetails')
     .prop('address')
     .prop('zipCode')
     .join();
 }</code></pre><p>Can we make that more succinct?</p>
 <pre class="prettyprint source lang-js"><code>// Short-circuit and return undefined if any errors are thrown
-function getZipCode(person) {
-  return Maybe.of(() => person.accountDetails.address.zipCode).join();
-}</code></pre><hr>
-<h2><a name="maybe-baby#docs">Docs</a></h2><p>Documentation generated via <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a>.</p>
+function getZipCode(user) {
+  return Maybe.of(() => user.accountDetails.address.zipCode).join();
+}</code></pre><p>Now we can safely get the <code>zipCode</code> without having to worry about the shape of the object:</p>
+<pre class="prettyprint source lang-js"><code>const zip1 = getZipCode(user_1);  // undefined
+const zip2 = getZipCode(user_2);  // undefined</code></pre><hr>
+<h2><a id="docs">Docs</a></h2><p>Documentation generated via <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a>.</p>
 <ul>
 <li><a href="https://mikechabot.github.io/maybe-baby/">https://mikechabot.github.io/maybe-baby/</a></li>
 </ul>
 <hr>
-<h2><a name="maybe-baby#api">API</a></h2><p>There's lots of ways to access your data using <code>maybe-baby</code>. Check out the API below or the complete <a href="https://mikechabot.github.io/maybe-baby/">documentation</a>.</p>
-<h3><a name="usage#of">of</a></h3><h5>Values</h5><p><code>of</code> accepts a value of any type, and stores it as the monad's value. A monad is returned.</p>
-<pre class="prettyprint source lang-javascript"><code>Maybe.of('foo');      // string
-Maybe.of(123);        // number
-Maybe.of(true);       // boolean
-Maybe.of({});         // object
-Maybe.of([]);         // array
-Maybe.of(null);       // null
-Maybe.of(undefined);  // undefined</code></pre><h4>Functions</h4><p>If a function is passed, the result will be passed as the monad's value. However, if the function throws an <code>error</code>, the monad's value is set to <code>undefined</code>.</p>
-<pre class="prettyprint source lang-javascript"><code>const person = {
-    accountDetails: {
-        address: null
-    }
-};
-
-const zipCode = Maybe.of(() => person.accountDetails.address.zipCode);
-zipCode.join();   // undefined</code></pre><hr>
-<h3><a name="usage#isJust">isJust, isNothing</a></h3><p>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></p>
+<h2><a id="api">API</a></h2><p>There are a lot of ways to access your data using <code>maybe-baby</code>. Check out the API below or the complete <a href="https://mikechabot.github.io/maybe-baby/">documentation</a>.</p>
+<h3><a id="of"><code>of(val|func)</code></a></h3><p>Accepts a value of any type, and returns a monad. When a <code>function</code> is passed, the return value is set as the monad's value.</p>
+<blockquote>
+<p>If <code>val(func)</code> results in an error, the monad's value is set to <code>undefined</code>.</p>
+</blockquote>
+<pre class="prettyprint source lang-javascript"><code>// Accepts any type
+Maybe.of('foo');              // string
+Maybe.of(123);                // number
+Maybe.of(true);               // boolean
+Maybe.of({});                 // object
+Maybe.of([]);                 // array
+Maybe.of(null);               // null
+Maybe.of(undefined);          // undefined
+Maybe.of(() => foo.bar.baz);  // function</code></pre><hr>
+<h3><a id="isjust-isnothing"><code>isJust()</code>, <code>isNothing()</code></a></h3><p>Use <code>isNothing</code> and <code>isJust</code> to determine whether the monad is <code>null</code> and/or <code>undefined</code></p>
 <pre class="prettyprint source lang-javascript"><code>const noVal = Maybe.of(null);
 noVal.isNothing();  // true
 noVal.isJust();     // false
@@ -142,51 +151,32 @@ noVal.isJust();     // false
 const aVal = Maybe.of(123);
 aVal.isNothing();  // false
 aVal.isJust();     // true</code></pre><hr>
-<h3><a name="usage#props">path, prop, props</a></h3><ul>
+<h3><a id="props"><code>path</code>, <code>prop</code>, <code>props</code></a></h3><ul>
 <li>Use <code>path</code>, <code>props</code>, or <code>prop</code> to get values at arbitrary depths.</li>
 <li>Each functions identically to the others; they only differ in their input parameters.</li>
 <li>As with every monadic function, they are chainable.</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Description</th>
-<th>Example </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>path(&lt;string&gt;)</code></td>
-<td>Period-delimited string path</td>
-<td><code>path('foo.bar.1')</code></td>
-</tr>
-<tr>
-<td><code>props(...properties)</code></td>
-<td>Takes an indefinite list of arguments</td>
-<td><code>props('foo', 'bar', 1)</code></td>
-</tr>
-<tr>
-<td><code>prop(&lt;string|number&gt;)</code></td>
-<td>Takes a single argument</td>
-<td><code>prop('foo').prop('bar').prop(1)</code></td>
-</tr>
-</tbody>
-</table>
-<pre class="prettyprint source lang-javascript"><code>const someDeepObj = { foo: { bar: [123, 456] } };
-const maybeObj = Maybe.of(someDeepObj);</code></pre><h4><code>prop(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.prop('foo').join();                       // { bar: [123, 456] }
-maybeObj.prop('foo').prop('bar').join();           // [123, 456]
-maybeObj.prop('foo').prop('bar').prop(1).join();   // 456</code></pre><h4><code>path(&lt;string&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.path('foo').join();        // { bar: [123, 456] }
-maybeObj.path('foo.bar').join();    // [123, 456]
-maybeObj.path('foo.bar.1').join();  // 456</code></pre><h4><code>props(&lt;string|number&gt;)</code></h4><pre class="prettyprint source lang-javascript"><code>maybeObj.props('foo').join();           // { bar: [123, 456] }
-maybeObj.props('foo', 'bar').join();    // [123, 456]
-maybeObj.props('foo', 'bar', 1).join(); // 456</code></pre><hr>
-<h3><a name="usage#map">map(func)</a></h3><p>Apply a transformation to the monad, and return a new monad:</p>
+<pre class="prettyprint source lang-javascript"><code>const myObject = {
+  foo: {
+    bar: [123, 456]
+  }
+};
+const mObj = Maybe.of(myObject);</code></pre><h4><code>path(&lt;string&gt;)</code></h4><p>Accepts a period-delimited string:</p>
+<pre class="prettyprint source lang-javascript"><code>mObj.path('foo').join();        // { bar: [123, 456] }
+mObj.path('foo.bar').join();    // [123, 456]
+mObj.path('foo.bar.1').join();  // 456</code></pre><h4><code>props(...properties)</code></h4><p>Accepts an indefinite list of arguments of string or number:</p>
+<pre class="prettyprint source lang-javascript"><code>mObj.props('foo').join();           // { bar: [123, 456] }
+mObj.props('foo', 'bar').join();    // [123, 456]
+mObj.props('foo', 'bar', 1).join(); // 456</code></pre><h4><code>prop(&lt;string|number&gt;)</code></h4><p>Accepts a single argument:</p>
+<pre class="prettyprint source lang-javascript"><code>mObj.prop('foo').join();                       // { bar: [123, 456] }
+mObj.prop('foo').prop('bar').join();           // [123, 456]
+mObj.prop('foo').prop('bar').prop(1).join();   // 456</code></pre><hr>
+<h3><a id="mapfunc"><code>map(func)</code></a></h3><p>Apply a transformation to the monad, and return a new monad:</p>
 <pre class="prettyprint source lang-javascript"><code>const val = 1;
 const newVal = Maybe.of(val).map(val => val + 1);
 
 newVal.join(); // 2;</code></pre><hr>
-<h3><a name="usage#chain">chain(func)</a></h3><p>Chain together functions that return Maybe monads:</p>
+<h3><a id="chainfunc"><code>chain(func)</code></a></h3><p>Chain together functions that return Maybe monads:</p>
 <pre class="prettyprint source lang-javascript"><code>function addOne (val) {
   return Maybe.of(val + 1);
 }
@@ -196,7 +186,7 @@ const three = Maybe.of(1)
  .chain(addOne);
 
  three.join(); // 3</code></pre><hr>
-<h2><a name="maybe-baby#usage">Example Usage</a></h2><ol>
+<h2><a id="example-usage">Example Usage</a></h2><ol>
 <li>Some object with an arbitrary shape.</li>
 </ol>
 <pre class="prettyprint source lang-javascript"><code>const person = {
@@ -209,7 +199,7 @@ const three = Maybe.of(1)
 };</code></pre><ol>
 <li>Example domain service that implements <code>maybe-baby</code> (<code>chain</code> and <code>prop</code>) to safely retrieve values from an object.</li>
 </ol>
-<pre class="prettyprint source lang-javascript"><code>
+<h4>Verbose</h4><pre class="prettyprint source lang-javascript"><code>
 const FLAT_PROPS = {
   FIRST_NAME: 'firstName',
   LAST_NAME : 'lastName',
@@ -219,8 +209,7 @@ const FLAT_PROPS = {
   ZIP_CODE  : 'zipCode'
 }
 
-let svc = {};
-const PersonService = svc = {
+const PersonService = {
     getFirsName (person) {
         return Maybe
             .of(person)
@@ -255,23 +244,43 @@ const PersonService = svc = {
             .chain(svc.getAddress)
             .prop(FLAT_PROPS.ZIP_CODE);
     }
+};</code></pre><h4>Compact</h4><pre class="prettyprint source lang-js"><code>const PersonService = {
+    getFirsName (person) {
+        return Maybe.of(() => person.firstName);
+    },
+    getLastName (person) {
+        return Maybe.of(() => person.lastName);
+    },
+    getAccountDetails (person) {
+        return Maybe.of(() => person.accountDetails);
+    },
+    getInsuranceCode (person) {
+         return Maybe.of(() => person.accountDetails.insuranceCode);
+    },
+    getAddress (person) {
+        return Maybe.of(() => person.accountDetails.address);
+    },
+    getZipCode (person) {
+        return Maybe.of(() => person.accountDetails.address.zipCode);
+    }
 };</code></pre><ol>
 <li>Get monad-wrapped values from service.</li>
 </ol>
-<pre class="prettyprint source lang-javascript"><code>const firstName = PersonService.getFirsName(person);
-const lastName = PersonService.getLastName(person);
+<pre class="prettyprint source lang-javascript"><code>const firstName      = PersonService.getFirsName(person);
+const lastName       = PersonService.getLastName(person);
 const accountDetails = PersonService.getAccountDetails(person);
-const insuranceCode = PersonService.getInsuranceCode(person);
-const address = PersonService.getAddress(person);
-const zipCode = PersonService.getZipCode(person);</code></pre><ol>
+const insuranceCode  = PersonService.getInsuranceCode(person);
+const address        = PersonService.getAddress(person);
+const zipCode        = PersonService.getZipCode(person);</code></pre><ol>
 <li>Get values from the Maybes.</li>
 </ol>
-<pre class="prettyprint source lang-javascript"><code>firstName.join();      // 'John'
-lastName.join();       // null
-accountDetails.join(); // { insuranceCode: 'BDX2321', address: null }
-insuranceCode.join();  // 'BDX2321'
-address.join();        // null
-zipCode.join();        // undefined</code></pre></article>
+<pre class="prettyprint source lang-javascript"><code>firstName.join();       // 'John'
+lastName.join();        // null
+accountDetails.join();  // { insuranceCode: 'BDX2321', address: null }
+insuranceCode.join();   // 'BDX2321'
+address.join();         // null
+zipCode.join();         // undefined</code></pre><hr>
+<h2><a id="credit">Credit</a></h2><p>Credit to <a href="https://github.com/jrsinclair">James Sinclair</a> for writing <a href="http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/">The Marvellously Mysterious JavaScript Maybe Monad</a>.</p></article>
     </section>
 
 
@@ -284,7 +293,7 @@ zipCode.join();        // undefined</code></pre></article>
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 23 2018 12:29:54 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu May 24 2018 13:28:55 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
