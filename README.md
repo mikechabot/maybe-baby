@@ -127,7 +127,7 @@ Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
 There's lots of ways to access your data using `maybe-baby`. Check out the API below or the complete [documentation](https://mikechabot.github.io/maybe-baby/).
 
-### <a id="of">of(val|func)</a>
+### <a id="of">`of(val|func)`</a>
 
 ##### Value
 
@@ -160,7 +160,7 @@ zipCode.join();   // undefined
 
 ----
 
-### <a id="isjust-isnothing">isJust(), isNothing()</a>
+### <a id="isjust-isnothing">`isJust()`, `isNothing()`</a>
 
 Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
 
@@ -176,7 +176,7 @@ aVal.isJust();     // true
 
 ----
 
-### <a name="usage#props">path, prop, props</a>
+### <a name="usage#props">`path`, `prop`, `props`</a>
 
 * Use `path`, `props`, or `prop` to get values at arbitrary depths.
 * Each functions identically to the others; they only differ in their input parameters.
@@ -216,7 +216,7 @@ maybeObj.props('foo', 'bar', 1).join(); // 456
 
 ----
 
-### <a name="usage#map">map(func)</a>
+### <a name="usage#map">`map(func)`</a>
 
 Apply a transformation to the monad, and return a new monad:
 
@@ -229,7 +229,7 @@ newVal.join(); // 2;
 
 ----
 
-### <a name="usage#chain">chain(func)</a>
+### <a name="usage#chain">`chain(func)`</a>
 
 Chain together functions that return Maybe monads:
 
