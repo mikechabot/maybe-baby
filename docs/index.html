@@ -86,7 +86,7 @@
     address: null
   }
 };</code></pre><p>And <code>user_2</code> is almost completely empty:</p>
-<pre class="prettyprint source lang-javascript"><code>const user_3 = {
+<pre class="prettyprint source lang-javascript"><code>const user_2 = {
   email: 'qux@bar.com'
 };</code></pre><h3>Problem</h3><p>What if we need the <code>zipCode</code> of each user, which happens to live on the <code>address</code>? Accessing it via dot notation (i.e. <code>user.accountDetails.address.zipCode</code>) will result in a <code>TypeError</code>. </p>
 <h3>Solutions?</h3><ol>
