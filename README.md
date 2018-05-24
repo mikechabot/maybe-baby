@@ -37,12 +37,8 @@ Install with yarn or npm:
 
 Data can be unreliable; often missing important properties. For example:
 
-* `user_1` has a `null` `address`. 
-* `user_2` is missing the `address` property. 
-* `user_3` is almost completely empty.
-
+`user_1` has a `null` `address`:
 ```javascript
-// Domain object with NULL address
 const user_1 = { 
   email: 'foo@bar.com',
   accountDetails: {
@@ -51,7 +47,10 @@ const user_1 = {
     address: null
   }
 };
+```
 
+`user_2` has no `address` property:
+```javascript
 const user_2 = { 
   email: 'baz@bar.com',
   accountDetails: {
@@ -59,11 +58,13 @@ const user_2 = {
     insuranceCode: 'BDX5454'
   }
 };
+```
 
+`user_3` is almost completely empty:
+```javascript
 const user_3 = { 
   email: 'qux@bar.com'
 };
-
 ```
 
 **Problem**
