@@ -36,12 +36,12 @@ Install with yarn or npm:
 
 ## <a name="maybe-baby#getting-started">Getting Started</a>
 
-When data is unreliable, minimize defensive coding with `maybe-baby` :
+Data can be unreliable, and often missing key attributes:
 
 ```javascript
 // Domain object with NULL address
 const user = { 
-  email: 'foo@bar.com'
+  email: 'foo@bar.com',
   accountDetails: {
     type: 'employee',
     insuranceCode: 'BDX2321',
@@ -52,25 +52,41 @@ const user = {
 
 **Problem**
 
-It looks like we're missing the `address` attribute on the `accountDetails` object. That's too bad since we're in a situation where we need the `zipCode`, which happens to live on the `address`. Accessing it via dot notation (`person.accountDetails.address.zipCode`) will result in a `TypeError`. 
+The `address` property is `null` in the `accountDetails` object, but we're in a situation where we need the `zipCode`, which happens to live on the `address`. 
+
+Accessing it via dot notation (`person.accountDetails.address.zipCode`) will result in a `TypeError`. 
 
 **Solutions?**
 
 1. Write some null checks, but that doesn't scale well, and is ugly.
+
+```
+// Purposely obnoxious
+function getZipCode(user) {
+  if (user !== null && user !== undefined) {
+    if (user.accountDetails !== null && user.accountDetails !== undefined) {
+      if (user.accountDetails.address !== null && user.accountDetails.address !== undefined) {
+      	return user.accountDetails.address.zipCode
+      }
+    }
+  }
+}
+```
+
 2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs can have large footprints, and most likely won't be implementing the monadic structure.
 
 **A better aproach?**
 
 1. The Maybe monad.
 
-How does that work? Let's find out -- and rememeber, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError` when trying to access the properties of an `undefined` object.
+How does that work? Let's find out. Regardless of what our data looks like, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`:
 
 ```js
 import Maybe from 'maybe-baby';
 
 // Short-circuit and return undefined if any errors are thrown
-function getZipCode(person) {
-  return Maybe.of(person)
+function getZipCode(user) {
+  return Maybe.of(user)
     .prop('accountDetails')
     .prop('address')
     .prop('zipCode')
@@ -81,8 +97,8 @@ Can we make that more succinct?
 
 ```js
 // Short-circuit and return undefined if any errors are thrown
-function getZipCode(person) {
-  return Maybe.of(() => person.accountDetails.address.zipCode).join();
+function getZipCode(user) {
+  return Maybe.of(() => user.accountDetails.address.zipCode).join();
 }
 ```
 
@@ -121,13 +137,13 @@ Maybe.of(undefined);  // undefined
 If a function is passed, the result will be passed as the monad's value. However, if the function throws an `error`, the monad's value is set to `undefined`.
 
 ```javascript
-const person = {
+const user = {
     accountDetails: {
         address: null
     }
 };
 
-const zipCode = Maybe.of(() => person.accountDetails.address.zipCode);
+const zipCode = Maybe.of(() => user.accountDetails.address.zipCode);
 zipCode.join();   // undefined
 ```
 
@@ -237,6 +253,8 @@ const person = {
 
 2. Example domain service that implements `maybe-baby` (`chain` and `prop`) to safely retrieve values from an object.
 
+#### Verbose
+
 ```javascript
 
 const FLAT_PROPS = {
@@ -248,8 +266,7 @@ const FLAT_PROPS = {
   ZIP_CODE  : 'zipCode'
 }
 
-let svc = {};
-const PersonService = svc = {
+const PersonService = {
     getFirsName (person) {
         return Maybe
             .of(person)
@@ -287,24 +304,49 @@ const PersonService = svc = {
 };
 ```
 
+#### Compact
+
+```js
+const PersonService = {
+    getFirsName (person) {
+        return Maybe.of(() => person.firstName);
+    },
+    getLastName (person) {
+        return Maybe.of(() => person.lastName);
+    },
+    getAccountDetails (person) {
+        return Maybe.of(() => person.accountDetails);
+    },
+    getInsuranceCode (person) {
+         return Maybe.of(() => person.accountDetails.insuranceCode);
+    },
+    getAddress (person) {
+        return Maybe.of(() => person.accountDetails.address);
+    },
+    getZipCode (person) {
+        return Maybe.of(() => person.accountDetails.address.zipCode);
+    }
+};
+```
+
 3. Get monad-wrapped values from service.
 
 ```javascript
-const firstName = PersonService.getFirsName(person);
-const lastName = PersonService.getLastName(person);
+const firstName      = PersonService.getFirsName(person);
+const lastName       = PersonService.getLastName(person);
 const accountDetails = PersonService.getAccountDetails(person);
-const insuranceCode = PersonService.getInsuranceCode(person);
-const address = PersonService.getAddress(person);
-const zipCode = PersonService.getZipCode(person);
+const insuranceCode  = PersonService.getInsuranceCode(person);
+const address        = PersonService.getAddress(person);
+const zipCode        = PersonService.getZipCode(person);
 ```
 
 4. Get values from the Maybes.
 
 ```javascript
-firstName.join();      // 'John'
-lastName.join();       // null
-accountDetails.join(); // { insuranceCode: 'BDX2321', address: null }
-insuranceCode.join();  // 'BDX2321'
-address.join();        // null
-zipCode.join();        // undefined
+firstName.join();       // 'John'
+lastName.join();        // null
+accountDetails.join();  // { insuranceCode: 'BDX2321', address: null }
+insuranceCode.join();   // 'BDX2321'
+address.join();         // null
+zipCode.join();         // undefined
 ```
