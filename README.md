@@ -75,7 +75,7 @@ What if we need the `zipCode` of each user, which happens to live on the `addres
 
 1. Write some null checks, but that doesn't scale well, and is ugly.
 
-```
+```javascript
 // Purposely obnoxious
 function getZipCode(user) {
   if (user !== null && user !== undefined) {
