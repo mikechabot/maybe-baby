@@ -129,9 +129,7 @@ There's lots of ways to access your data using `maybe-baby`. Check out the API b
 
 ### <a id="of">`of(val|func)`</a>
 
-##### Value
-
-`of` accepts a value of any type, and returns a monad. When a `function` is passed, the return value is set as the monad's value.
+Accepts a value of any type, and returns a monad. When a `function` is passed, the return value is set as the monad's value.
 
 > If `val(func)` results in an error, the monad's value is set to `undefined`.
 
