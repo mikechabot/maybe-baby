@@ -131,33 +131,21 @@ There's lots of ways to access your data using `maybe-baby`. Check out the API b
 
 ##### Value
 
-`of` accepts a value of any type, and stores it as the monad's value. A monad is returned.
+`of` accepts a value of any type, and returns a monad. When a `function` is passed, the return value is set as the monad's value.
+
+> If `val(func)` results in an error, the monad's value is set to `undefined`.
 
 ```javascript
-Maybe.of('foo');      // string
-Maybe.of(123);        // number
-Maybe.of(true);       // boolean
-Maybe.of({});         // object
-Maybe.of([]);         // array
-Maybe.of(null);       // null
-Maybe.of(undefined);  // undefined
+// Accepts any type
+Maybe.of('foo');              // string
+Maybe.of(123);                // number
+Maybe.of(true);               // boolean
+Maybe.of({});                 // object
+Maybe.of([]);                 // array
+Maybe.of(null);               // null
+Maybe.of(undefined);          // undefined
+Maybe.of(() => foo.bar.baz);  // function
 ```
-
-##### Function
-
-If a function is passed, the result will be passed as the monad's value. However, if the function throws an `error`, the monad's value is set to `undefined`.
-
-```javascript
-const user = {
-    accountDetails: {
-        address: null
-    }
-};
-
-const zipCode = Maybe.of(() => user.accountDetails.address.zipCode);
-zipCode.join();   // undefined
-```
-
 ----
 
 ### <a id="isjust-isnothing">`isJust()`, `isNothing()`</a>
@@ -182,36 +170,44 @@ aVal.isJust();     // true
 * Each functions identically to the others; they only differ in their input parameters.
 * As with every monadic function, they are chainable.
 
-| Function | Description | Example 
-| ----- | ---- | ----------- |
-| `path(<string>)` | Period-delimited string path | `path('foo.bar.1')` |
-| `props(...properties)` | Takes an indefinite list of arguments | `props('foo', 'bar', 1)` |
-| `prop(<string\|number>)` | Takes a single argument | `prop('foo').prop('bar').prop(1)` |
-
 ```javascript
-const someDeepObj = { foo: { bar: [123, 456] } };
-const maybeObj = Maybe.of(someDeepObj);
-```
-
-#### `prop(<string|number>)`
-```javascript
-maybeObj.prop('foo').join();                       // { bar: [123, 456] }
-maybeObj.prop('foo').prop('bar').join();           // [123, 456]
-maybeObj.prop('foo').prop('bar').prop(1).join();   // 456
+const myObject = { 
+  foo: { 
+    bar: [123, 456] 
+  } 
+};
+const mObj = Maybe.of(myObject);
 ```
 
 #### `path(<string>)`
+
+Accepts a period-delimited string:
+
 ```javascript
-maybeObj.path('foo').join();        // { bar: [123, 456] }
-maybeObj.path('foo.bar').join();    // [123, 456]
-maybeObj.path('foo.bar.1').join();  // 456
+mObj.path('foo').join();        // { bar: [123, 456] }
+mObj.path('foo.bar').join();    // [123, 456]
+mObj.path('foo.bar.1').join();  // 456
 ```
 
-#### `props(<string|number>)`
+#### `props(...properties)`
+
+Accepts an indefinite list of arguments of string or number:
+
 ```javascript
-maybeObj.props('foo').join();           // { bar: [123, 456] }
-maybeObj.props('foo', 'bar').join();    // [123, 456]
-maybeObj.props('foo', 'bar', 1).join(); // 456
+mObj.props('foo').join();           // { bar: [123, 456] }
+mObj.props('foo', 'bar').join();    // [123, 456]
+mObj.props('foo', 'bar', 1).join(); // 456
+```
+
+
+#### `prop(<string|number>)`
+
+Accepts a single argument:
+
+```javascript
+mObj.prop('foo').join();                       // { bar: [123, 456] }
+mObj.prop('foo').prop('bar').join();           // [123, 456]
+mObj.prop('foo').prop('bar').prop(1).join();   // 456
 ```
 
 ----
