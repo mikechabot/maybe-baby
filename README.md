@@ -94,7 +94,7 @@ function getZipCode(user) {
 
 1. The Maybe monad.
 
-How does that work? Let's find out. Regardless of what our data looks like, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`:
+How does that work? Let's find out. Keep in mind, regardless of what our data looks like, with `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`:
 
 ```js
 import Maybe from 'maybe-baby';
