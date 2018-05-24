@@ -36,11 +36,15 @@ Install with yarn or npm:
 
 ## <a name="maybe-baby#getting-started">Getting Started</a>
 
-Data can be unreliable, and often missing key attributes:
+Data can be unreliable; often missing important properties. For example:
+
+* `user_1` has a `null` `address`. 
+* `user_2` is missing the `address` property. 
+* `user_3` is almost completely empty.
 
 ```javascript
 // Domain object with NULL address
-const user = { 
+const user_1 = { 
   email: 'foo@bar.com',
   accountDetails: {
     type: 'employee',
@@ -48,13 +52,24 @@ const user = {
     address: null
   }
 };
+
+const user_2 = { 
+  email: 'baz@bar.com',
+  accountDetails: {
+    type: 'manager',
+    insuranceCode: 'BDX5454'
+  }
+};
+
+const user_3 = { 
+  email: 'qux@bar.com'
+};
+
 ```
 
 **Problem**
 
-The `address` property is `null` in the `accountDetails` object, but we're in a situation where we need the `zipCode`, which happens to live on the `address`. 
-
-Accessing it via dot notation (`person.accountDetails.address.zipCode`) will result in a `TypeError`. 
+What if we need the `zipCode` of each user, which happens to live on the `address`? Accessing it via dot notation (i.e. `user.accountDetails.address.zipCode`) will result in a `TypeError`. 
 
 **Solutions?**
 
