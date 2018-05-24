@@ -14,8 +14,6 @@ Minimize defensive coding. `maybe-baby` is the [Maybe monad](https://en.wikipedi
 
 > Credit to [James Sinclair](https://github.com/jrsinclair) for writing [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
-----
-
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [Docs](#docs)
