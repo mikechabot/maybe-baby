@@ -35,9 +35,8 @@ Install with yarn or npm:
 
 ## <a id="getting-started">Getting Started</a>
 
-Data can be unreliable; often missing important properties. For example:
+Data can be unreliable; often missing important properties. For example, `user_1` has a `null` `address`:
 
-`user_1` has a `null` `address`:
 ```javascript
 const user_1 = { 
   email: 'foo@bar.com',
@@ -49,7 +48,7 @@ const user_1 = {
 };
 ```
 
-`user_2` is almost completely empty:
+And `user_2` is almost completely empty:
 ```javascript
 const user_3 = { 
   email: 'qux@bar.com'
