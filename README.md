@@ -118,7 +118,7 @@ const zip2 = getZipCode(user_2);  // undefined
 
 Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
-* https://mikechabot.github.io/maybe-baby/
+* [https://mikechabot.github.io/maybe-baby/](https://mikechabot.github.io/maybe-baby/)
 
 ---
 
