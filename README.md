@@ -24,7 +24,7 @@ Minimize defensive coding with `maybe-baby`. A JavaScript implementation of the 
 - [Example Usage](#example-usage)
 - [Credit](#credit)
 
-## <a name="maybe-baby#installing">Installing</a>
+## <a id="installing">Installing</a>
 
 Install with yarn or npm:
 
@@ -33,7 +33,7 @@ Install with yarn or npm:
 
 ---
 
-## <a name="maybe-baby#getting-started">Getting Started</a>
+## <a id="getting-started">Getting Started</a>
 
 Data can be unreliable; often missing important properties. For example:
 
@@ -49,18 +49,7 @@ const user_1 = {
 };
 ```
 
-`user_2` has no `address` property:
-```javascript
-const user_2 = { 
-  email: 'baz@bar.com',
-  accountDetails: {
-    type: 'manager',
-    insuranceCode: 'BDX5454'
-  }
-};
-```
-
-`user_3` is almost completely empty:
+`user_2` is almost completely empty:
 ```javascript
 const user_3 = { 
   email: 'qux@bar.com'
@@ -122,12 +111,11 @@ Now we can safely get the `zipCode` without having to worry about the shape of t
 ```js
 const zip1 = getZipCode(user_1);  // undefined
 const zip2 = getZipCode(user_2);  // undefined
-const zip3 = getZipCode(user_3);  // undefined
 ```
 
 ----
 
-## <a name="maybe-baby#docs">Docs</a>
+## <a id="#docs">Docs</a>
 
 Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
@@ -135,13 +123,13 @@ Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
 ---
 
-## <a name="maybe-baby#api">API</a>
+## <a id="#api">API</a>
 
 There's lots of ways to access your data using `maybe-baby`. Check out the API below or the complete [documentation](https://mikechabot.github.io/maybe-baby/).
 
-### <a name="usage#of">of</a>
+### <a id="of">of(val|func)</a>
 
-##### Values
+##### Value
 
 `of` accepts a value of any type, and stores it as the monad's value. A monad is returned.
 
@@ -155,7 +143,7 @@ Maybe.of(null);       // null
 Maybe.of(undefined);  // undefined
 ```
 
-#### Functions
+##### Function
 
 If a function is passed, the result will be passed as the monad's value. However, if the function throws an `error`, the monad's value is set to `undefined`.
 
@@ -172,7 +160,7 @@ zipCode.join();   // undefined
 
 ----
 
-### <a name="usage#isJust">isJust, isNothing</a>
+### <a id="isjust-isnothing">isJust(), isNothing()</a>
 
 Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
 
