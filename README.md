@@ -12,8 +12,6 @@
 
 Minimize defensive coding with `maybe-baby`. A JavaScript implementation of the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad). 
 
-> Credit to [James Sinclair](https://github.com/jrsinclair) for writing [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
-
 - [Installing](#installing)
 - [Getting Started](#getting-started)
 - [Docs](#docs)
@@ -24,6 +22,8 @@ Minimize defensive coding with `maybe-baby`. A JavaScript implementation of the 
   - [map](#mapfunc)
   - [chain](#chainfunc)
 - [Example Usage](#example-usage)
+
+> Credit to [James Sinclair](https://github.com/jrsinclair) for writing [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
 ## <a name="maybe-baby#installing">Installing</a>
 
