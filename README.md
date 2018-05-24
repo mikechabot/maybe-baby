@@ -50,7 +50,7 @@ const user_1 = {
 
 And `user_2` is almost completely empty:
 ```javascript
-const user_3 = { 
+const user_2 = { 
   email: 'qux@bar.com'
 };
 ```
