@@ -56,11 +56,11 @@ const user_3 = {
 };
 ```
 
-**Problem**
+### Problem
 
 What if we need the `zipCode` of each user, which happens to live on the `address`? Accessing it via dot notation (i.e. `user.accountDetails.address.zipCode`) will result in a `TypeError`. 
 
-**Solutions?**
+### Solutions?
 
 1. Write some null checks, but that doesn't scale well, and is ugly.
 
@@ -79,7 +79,7 @@ function getZipCode(user) {
 
 2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs can have large footprints, and most likely won't be implementing the monadic structure.
 
-**A better aproach?**
+### A better approach?
 
 1. The Maybe monad.
 
