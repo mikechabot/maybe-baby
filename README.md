@@ -10,11 +10,11 @@
 
 # maybe-baby
 
-Minimize defensive coding. `maybe-baby` is the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad) implemented in JavaScript. 
+Minimize defensive coding with `maybe-baby`. A JavaScript implementation of the [Maybe monad](https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad). 
 
 > Credit to [James Sinclair](https://github.com/jrsinclair) for writing [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
 
-- [Installation](#installation)
+- [Insallting](#installing)
 - [Getting Started](#getting-started)
 - [Docs](#docs)
 - [API](#api)
@@ -25,7 +25,7 @@ Minimize defensive coding. `maybe-baby` is the [Maybe monad](https://en.wikipedi
   - [chain](#chainfunc)
 - [Example Usage](#example-usage)
 
-## <a name="maybe-baby#installation">Installation</a>
+## <a name="maybe-baby#installing">Installing</a>
 
 Install with yarn or npm:
 
