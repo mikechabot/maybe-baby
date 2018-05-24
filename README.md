@@ -114,7 +114,7 @@ const zip2 = getZipCode(user_2);  // undefined
 
 ----
 
-## <a id="#docs">Docs</a>
+## <a id="docs">Docs</a>
 
 Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
@@ -122,7 +122,7 @@ Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
 ---
 
-## <a id="#api">API</a>
+## <a id="api">API</a>
 
 There are a lot of ways to access your data using `maybe-baby`. Check out the API below or the complete [documentation](https://mikechabot.github.io/maybe-baby/).
 
