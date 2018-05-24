@@ -18,7 +18,7 @@ Minimize defensive coding with `maybe-baby`. A JavaScript implementation of the 
 - [API](#api)
   - [of](#of)
   - [isJust, isNothing](#isjust-isnothing)
-  - [path, prop, props](#path-prop-props)
+  - [path, prop, props](#props)
   - [map](#mapfunc)
   - [chain](#chainfunc)
 - [Example Usage](#example-usage)
@@ -161,7 +161,7 @@ aVal.isJust();     // true
 
 ----
 
-### <a name="usage#props">`path`, `prop`, `props`</a>
+### <a id="props">`path`, `prop`, `props`</a>
 
 * Use `path`, `props`, or `prop` to get values at arbitrary depths.
 * Each functions identically to the others; they only differ in their input parameters.
@@ -209,7 +209,7 @@ mObj.prop('foo').prop('bar').prop(1).join();   // 456
 
 ----
 
-### <a name="usage#map">`map(func)`</a>
+### <a id="mapfunc">`map(func)`</a>
 
 Apply a transformation to the monad, and return a new monad:
 
@@ -222,7 +222,7 @@ newVal.join(); // 2;
 
 ----
 
-### <a name="usage#chain">`chain(func)`</a>
+### <a id="chainfunc">`chain(func)`</a>
 
 Chain together functions that return Maybe monads:
 
@@ -240,7 +240,7 @@ const three = Maybe.of(1)
 
 ----
 
-## <a name="maybe-baby#usage">Example Usage</a>
+## <a id="example-usage">Example Usage</a>
 
 1. Some object with an arbitrary shape.
 
@@ -357,6 +357,6 @@ zipCode.join();         // undefined
 
 ----
 
-## <a name="maybe-baby#credit">Credit</a>
+## <a id="credit">Credit</a>
 
 Credit to [James Sinclair](https://github.com/jrsinclair) for writing [The Marvellously Mysterious JavaScript Maybe Monad](http://jrsinclair.com/articles/2016/marvellously-mysterious-javascript-maybe-monad/).
