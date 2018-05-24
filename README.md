@@ -117,6 +117,14 @@ function getZipCode(user) {
 }
 ```
 
+Now we can safely get the `zipCode` without having to worry about the shape of the object:
+
+```js
+const zip1 = getZipCode(user_1);  // undefined
+const zip2 = getZipCode(user_2);  // undefined
+const zip3 = getZipCode(user_3);  // undefined
+```
+
 ----
 
 ## <a name="maybe-baby#docs">Docs</a>
