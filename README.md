@@ -157,7 +157,7 @@ aVal.isNothing();  // false
 
 ### <a id="props">`path`, `prop`</a>
 
-* Use `path` or `prop` to get values at arbitrary depths.
+Use `path` or `prop` to get values at arbitrary depths.
 
 ```javascript
 const myObject = { 
