@@ -1,14 +1,22 @@
-'use strict';
-
 const DELIMITER = '.';
+
+/**
+ * Determine whether a path argument is valid
+ * @param path
+ * @return {boolean}
+ */
+function isValidPath(path) {
+  if (path === null || path === undefined) return false;
+  return typeof path === 'string' && path.length > 0;
+}
 
 /**
  * Private constructor. Use <code>Maybe.of()</code> instead.
  * @param val {*} Object, string, or number
  * @constructor
  */
-const Maybe = function Maybe (val) {
-    this.__value = val;
+const Maybe = function Maybe(val) {
+  this.__value = val;
 };
 
 /**
@@ -24,13 +32,13 @@ const Maybe = function Maybe (val) {
  * @returns {Maybe} A Maybe monad
  */
 Maybe.of = function (val) {
-    try {
-        return new Maybe(
-            typeof val === 'function' ? val() : val
-        );
-    } catch (error) {
-        return new Maybe(undefined);
-    }
+  try {
+    return new Maybe(
+      typeof val === 'function' ? val() : val,
+    );
+  } catch (error) {
+    return new Maybe(undefined);
+  }
 };
 
 /**
@@ -43,7 +51,7 @@ Maybe.of = function (val) {
  * @returns {*} Returns the value of the monad
  */
 Maybe.prototype.join = function () {
-    return this.__value;
+  return this.__value;
 };
 
 /**
@@ -53,10 +61,11 @@ Maybe.prototype.join = function () {
  *
  * maybe1.isJust();    // true
  * maybe2.isJust();    // false
- * @returns {boolean} <code>true</code> if the value is defined, <code>false</code> if the monad is null or undefined.
+ * @returns {boolean} <code>true</code> if the value is defined,
+ * <code>false</code> if the monad is null or undefined.
  */
 Maybe.prototype.isJust = function () {
-    return !this.isNothing();
+  return !this.isNothing();
 };
 
 /**
@@ -66,16 +75,18 @@ Maybe.prototype.isJust = function () {
  *
  * maybe1.isNothing();    // true
  * maybe2.isNothing()     // false
- * @returns {boolean} <code>true</code> if the value is null or undefined, <code>false</code> if the value is defined.
+ * @returns {boolean} <code>true</code> if the value is null or
+ * undefined, <code>false</code> if the value is defined.
  */
 Maybe.prototype.isNothing = function () {
-    return this.__value === null || this.__value === undefined;
+  return this.__value === null || this.__value === undefined;
 };
 
 /**
  * Chain to the end of <code>prop</code>, <code>props</code>, or <code>path</code> as the
  * default value to return if the <code>isNothing()</code> is true
- * @param defaultValue {string} Return this value when <code>join()</code> is called and <code>isNothing()</code> is true
+ * @param defaultValue {string} Return this value when
+ * <code>join()</code> is called and <code>isNothing()</code> is true
  * @example const maybe1 = Maybe.of(null);
  *
  * maybe1.orElse('N/A');
@@ -83,10 +94,10 @@ Maybe.prototype.isNothing = function () {
  * @returns {Maybe} A monad containing the default value
  */
 Maybe.prototype.orElse = function (defaultValue) {
-    if (this.isNothing()) {
-        return Maybe.of(defaultValue);
-    }
-    return this;
+  if (this.isNothing()) {
+    return Maybe.of(defaultValue);
+  }
+  return this;
 };
 
 /**
@@ -103,9 +114,7 @@ Maybe.prototype.orElse = function (defaultValue) {
  * @returns {Maybe} A monad containing the value of a given property or index
  */
 Maybe.prototype.prop = function (property) {
-    return this.map(function (value) {
-        return value[property];
-    });
+  return this.map(value => value[property]);
 };
 
 /**
@@ -122,19 +131,19 @@ Maybe.prototype.prop = function (property) {
  * @returns {Maybe} A monad containing the value at a given path
  */
 Maybe.prototype.props = function (...properties) {
-    if (properties.length === 0) {
-        return Maybe.of(undefined);
-    } else {
-        const maybeValue = this.prop(properties.shift());
-        return properties.length > 0
-            ? maybeValue.props(...properties)
-            : maybeValue;
-    }
+  if (properties.length === 0) {
+    return Maybe.of(undefined);
+  }
+  const maybeValue = this.prop(properties.shift());
+  return properties.length > 0
+    ? maybeValue.props(...properties)
+    : maybeValue;
 };
 
 /**
  * Get a value on the monad given a property path in string form
- * @param path {string} A period delimited string representing the path (e.g. 'foo.bar.baz) to search
+ * @param path {string} A period delimited string representing the path (e.g. 'foo.bar.baz)
+ * to search
  * @example const exampleObj = {
  *      foo: 'bar',
  *      baz: [1,2,3]
@@ -146,9 +155,9 @@ Maybe.prototype.props = function (...properties) {
  * @returns {Maybe} A monad containing the value at a given path
  */
 Maybe.prototype.path = function (path) {
-    return this.__isValidPath(path)
-        ? this.props(...path.split(DELIMITER))
-        : Maybe.of(undefined);
+  return isValidPath(path)
+    ? this.props(...path.split(DELIMITER))
+    : Maybe.of(undefined);
 };
 
 /**
@@ -158,11 +167,11 @@ Maybe.prototype.path = function (path) {
  * @returns {Maybe} A monad created from the result of the transformation
  */
 Maybe.prototype.map = function (transform) {
-    if (typeof transform !== 'function') throw new Error('transform must be a function');
-    if (this.isNothing()) {
-        return Maybe.of(undefined);
-    }
-    return Maybe.of(transform(this.join()));
+  if (typeof transform !== 'function') throw new Error('transform must be a function');
+  if (this.isNothing()) {
+    return Maybe.of(undefined);
+  }
+  return Maybe.of(transform(this.join()));
 };
 
 /**
@@ -179,18 +188,7 @@ Maybe.prototype.map = function (transform) {
  * @returns {Maybe} A monad created from the result of the transformation
  */
 Maybe.prototype.chain = function (fn) {
-    return this.map(fn).join();
-};
-
-/**
- * Determine whether a path argument is valid
- * @param path {string}
- * @returns {boolean} <code>true</code> if the path is valid, <code>false</code> if not
- * @private
- */
-Maybe.prototype.__isValidPath = function (path) {
-    if (path === null || path === undefined) return false;
-    return typeof path === 'string' && path.length > 0;
+  return this.map(fn).join();
 };
 
 module.exports = Maybe;
