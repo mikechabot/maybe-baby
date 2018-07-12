@@ -3,6 +3,9 @@
 <div align="center">
 Minimize defensive coding. A JavaScript implementation of the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad">Maybe monad</a>
 <br /><br />
+  <a href="https://www.npmjs.com/package/maybe-baby">
+    <img src="https://img.shields.io/npm/v/maybe-baby.svg?style=flat-square" alt="npm version" />
+  </a>
   <a href="https://travis-ci.org/mikechabot/maybe-baby">
     <img src="https://travis-ci.org/mikechabot/maybe-baby.svg?branch=master" alt="build status" />
   </a>
