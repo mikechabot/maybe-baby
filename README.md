@@ -20,7 +20,7 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 <hr />
 
 - [Install](#install)
-- [Usage](#usage)
+- [Getting Started](#getting-started)
 - [Docs](#docs)
 - [API](#api)
   - [of](#of)
@@ -36,34 +36,33 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 
 ---
 
-## <a id="usage">Usage</a>
-
-Nested data can be unreliable; often missing important properties.
-
-### Problem
+## <a id="getting-started">Getting Started</a>
 
 What if we need the `zipCode` of the user below, which lives on the `address` object? 
-
-Accessing it via dot notation (i.e. `user.address.zipCode`) will result in a `TypeError`: 
 
 ```javascript
 const user = { 
   email: 'foo@bar.com',
   address: null,
   name: {
-     firstName: 'John',
-     middleName: null,
-     lastName: null
+     first: 'John',
+     last: null,
+     middle: null
   }
 };
 ```
 
-### Solutions?
-
-1. Write some null checks, but that doesn't scale well, and is ugly.
+Accessing it via dot notation will result in an error: 
 
 ```javascript
-// Purposely obnoxious
+const zipCode = user.address.zipCode;  // Uncaught TypeError: Cannot read property 'zipCode' of undefined
+```
+
+### Possible Solutions?
+
+1. Write some ugly null checks that don't scale well:
+
+```javascript
 function getZipCode(user) {
   if (user !== null && user !== undefined) {
      if (user.address !== null && user.address !== undefined) {
@@ -73,15 +72,13 @@ function getZipCode(user) {
 }
 ```
 
-2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libs can have large footprints, and most likely won't be implementing the monadic structure.
+2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libaries have large footprints, and most likely won't be implementing the monadic structure.
 
 3. Wait for [optional chaining](https://github.com/tc39/proposal-optional-chaining) to be approved in ECMA, or use [babel-plugin-transform-optional-chaining](https://www.npmjs.com/package/babel-plugin-transform-optional-chaining).
 
-### A better approach?
+### A Better Solution?
 
-1. The Maybe monad.
-
-With `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`:
+1. Use `maybe-baby` to minimize defensive coding:
 
 ```javascript
 import Maybe from 'maybe-baby';
@@ -101,10 +98,12 @@ function getZipCode(user) {
 }
 ```
 
-Now we can safely get the `zipCode` without having to worry about the shape of the object:
+Now we can safely get the `zipCode` without worrying about the shape of the object.
+
+> With `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`:
 
 ```js
-const zipCode = getZipCode(user);  // undefined
+console.log(getZipCode(user));   // undefined
 ```
 
 ----
