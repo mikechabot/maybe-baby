@@ -135,13 +135,15 @@ const empty = Maybe.of(null);
 const undef = Maybe.of(undefined);
 ```
 
-Excutes the function, and sets the return value as the monad's value. 
+Accepts a function, and sets the function's return value as the monad's value, returns a monad. 
 
 > If the function results in an error, the monad's value is set to `undefined`.
 
 ```javascript
 const user = {};
-const zipCode = Maybe.of(() => user.address.zipCode);
+const mZipCode = Maybe.of(() => user.address.zipCode);
+
+console.log(mZipCode.join()); // undefined
 ```
 ----
 
@@ -164,7 +166,7 @@ aVal.isNothing();  // false
 
 ### <a id="props">`path`, `prop`</a>
 
-* Use `path`, or `prop` to get values at arbitrary depths.
+* Use `path` or `prop` to get values at arbitrary depths.
 
 ```javascript
 const myObject = { 
