@@ -40,7 +40,11 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 
 Nested data can be unreliable; often missing important properties.
 
-What if we need the `zipCode` of the user below, which lives on the `address`? Accessing it via dot notation (i.e. `user.address.zipCode`) will result in a `TypeError`: 
+### Problem
+
+What if we need the `zipCode` of the user below, which lives on the `address` object? 
+
+Accessing it via dot notation (i.e. `user.address.zipCode`) will result in a `TypeError`: 
 
 ```javascript
 const user = { 
@@ -79,7 +83,7 @@ function getZipCode(user) {
 
 With `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`:
 
-```js
+```javascript
 import Maybe from 'maybe-baby';
 
 function getZipCode(user) {
