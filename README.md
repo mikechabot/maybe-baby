@@ -72,7 +72,7 @@ function getZipCode(user) {
 }
 ```
 
-2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libaries have large footprints, and most likely won't be implementing the monadic structure.
+2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libraries have large footprints, and most likely won't be implementing the monadic structure.
 
 3. Wait for [optional chaining](https://github.com/tc39/proposal-optional-chaining) to be approved in ECMA, or use [babel-plugin-transform-optional-chaining](https://www.npmjs.com/package/babel-plugin-transform-optional-chaining).
 
