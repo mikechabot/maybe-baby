@@ -98,7 +98,7 @@ function getZipCode(user) {
 }
 ```
 
-Now we can safely get the `zipCode` without worrying about the shape of the object:
+Now we can safely get the `zipCode` without worrying about the shape of the object, or encountering `TypeErrors`:
 
 ```js
 console.log(getZipCode(user));   // undefined
