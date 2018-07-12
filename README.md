@@ -87,16 +87,6 @@ function getZipCode(user) {
 import Maybe from 'maybe-baby';
 
 function getZipCode(user) {
-  return Maybe.of(user)
-    .prop('address')
-    .prop('zipCode')
-    .join();
-}
-```
-Can we make that more succinct?
-
-```js
-function getZipCode(user) {
   return Maybe.of(() => user.address.zipCode).join();
 }
 ```
@@ -104,7 +94,8 @@ function getZipCode(user) {
 Now we can safely get the `zipCode` without worrying about the shape of the object, or encountering `TypeErrors`:
 
 ```js
-console.log(getZipCode(user));   // undefined
+const zipCode = getZipCode(user);
+console.log(zipCode);  // undefined
 ```
 
 ----
