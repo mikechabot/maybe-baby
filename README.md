@@ -98,9 +98,7 @@ function getZipCode(user) {
 }
 ```
 
-Now we can safely get the `zipCode` without worrying about the shape of the object.
-
-> With `maybe-baby`, we're **guaranteed** to never encounter a `TypeError`:
+Now we can safely get the `zipCode` without worrying about the shape of the object:
 
 ```js
 console.log(getZipCode(user));   // undefined
