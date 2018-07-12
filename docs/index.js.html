@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Maybe.html">Maybe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#.of">of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#chain">chain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isJust">isJust</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isNothing">isNothing</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#join">join</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#map">map</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#orElse">orElse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#path">path</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#prop">prop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#props">props</a></span></li>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Maybe.html">Maybe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#.of">of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#chain">chain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isJust">isJust</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#isNothing">isNothing</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#join">join</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#map">map</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#orElse">orElse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#path">path</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#prop">prop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Maybe.html#props">props</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#isValidPath">isValidPath</a></span></li>
 </nav>
 
 <div id="main">
@@ -39,17 +39,25 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+            <pre class="prettyprint source linenums"><code>const DELIMITER = '.';
 
-const DELIMITER = '.';
+/**
+ * Determine whether a path argument is valid
+ * @param path
+ * @return {boolean}
+ */
+function isValidPath(path) {
+  if (path === null || path === undefined) return false;
+  return typeof path === 'string' &amp;&amp; path.length > 0;
+}
 
 /**
  * Private constructor. Use &lt;code>Maybe.of()&lt;/code> instead.
  * @param val {*} Object, string, or number
  * @constructor
  */
-const Maybe = function Maybe (val) {
-    this.__value = val;
+const Maybe = function Maybe(val) {
+  this.__value = val;
 };
 
 /**
@@ -65,13 +73,13 @@ const Maybe = function Maybe (val) {
  * @returns {Maybe} A Maybe monad
  */
 Maybe.of = function (val) {
-    try {
-        return new Maybe(
-            typeof val === 'function' ? val() : val
-        );
-    } catch (error) {
-        return new Maybe(undefined);
-    }
+  try {
+    return new Maybe(
+      typeof val === 'function' ? val() : val,
+    );
+  } catch (error) {
+    return new Maybe(undefined);
+  }
 };
 
 /**
@@ -84,7 +92,7 @@ Maybe.of = function (val) {
  * @returns {*} Returns the value of the monad
  */
 Maybe.prototype.join = function () {
-    return this.__value;
+  return this.__value;
 };
 
 /**
@@ -94,10 +102,11 @@ Maybe.prototype.join = function () {
  *
  * maybe1.isJust();    // true
  * maybe2.isJust();    // false
- * @returns {boolean} &lt;code>true&lt;/code> if the value is defined, &lt;code>false&lt;/code> if the monad is null or undefined.
+ * @returns {boolean} &lt;code>true&lt;/code> if the value is defined,
+ * &lt;code>false&lt;/code> if the monad is null or undefined.
  */
 Maybe.prototype.isJust = function () {
-    return !this.isNothing();
+  return !this.isNothing();
 };
 
 /**
@@ -107,16 +116,18 @@ Maybe.prototype.isJust = function () {
  *
  * maybe1.isNothing();    // true
  * maybe2.isNothing()     // false
- * @returns {boolean} &lt;code>true&lt;/code> if the value is null or undefined, &lt;code>false&lt;/code> if the value is defined.
+ * @returns {boolean} &lt;code>true&lt;/code> if the value is null or
+ * undefined, &lt;code>false&lt;/code> if the value is defined.
  */
 Maybe.prototype.isNothing = function () {
-    return this.__value === null || this.__value === undefined;
+  return this.__value === null || this.__value === undefined;
 };
 
 /**
  * Chain to the end of &lt;code>prop&lt;/code>, &lt;code>props&lt;/code>, or &lt;code>path&lt;/code> as the
  * default value to return if the &lt;code>isNothing()&lt;/code> is true
- * @param defaultValue {string} Return this value when &lt;code>join()&lt;/code> is called and &lt;code>isNothing()&lt;/code> is true
+ * @param defaultValue {string} Return this value when
+ * &lt;code>join()&lt;/code> is called and &lt;code>isNothing()&lt;/code> is true
  * @example const maybe1 = Maybe.of(null);
  *
  * maybe1.orElse('N/A');
@@ -124,10 +135,10 @@ Maybe.prototype.isNothing = function () {
  * @returns {Maybe} A monad containing the default value
  */
 Maybe.prototype.orElse = function (defaultValue) {
-    if (this.isNothing()) {
-        return Maybe.of(defaultValue);
-    }
-    return this;
+  if (this.isNothing()) {
+    return Maybe.of(defaultValue);
+  }
+  return this;
 };
 
 /**
@@ -144,9 +155,7 @@ Maybe.prototype.orElse = function (defaultValue) {
  * @returns {Maybe} A monad containing the value of a given property or index
  */
 Maybe.prototype.prop = function (property) {
-    return this.map(function (value) {
-        return value[property];
-    });
+  return this.map(value => value[property]);
 };
 
 /**
@@ -163,19 +172,19 @@ Maybe.prototype.prop = function (property) {
  * @returns {Maybe} A monad containing the value at a given path
  */
 Maybe.prototype.props = function (...properties) {
-    if (properties.length === 0) {
-        return Maybe.of(undefined);
-    } else {
-        const maybeValue = this.prop(properties.shift());
-        return properties.length > 0
-            ? maybeValue.props(...properties)
-            : maybeValue;
-    }
+  if (properties.length === 0) {
+    return Maybe.of(undefined);
+  }
+  const maybeValue = this.prop(properties.shift());
+  return properties.length > 0
+    ? maybeValue.props(...properties)
+    : maybeValue;
 };
 
 /**
  * Get a value on the monad given a property path in string form
- * @param path {string} A period delimited string representing the path (e.g. 'foo.bar.baz) to search
+ * @param path {string} A period delimited string representing the path (e.g. 'foo.bar.baz)
+ * to search
  * @example const exampleObj = {
  *      foo: 'bar',
  *      baz: [1,2,3]
@@ -187,9 +196,9 @@ Maybe.prototype.props = function (...properties) {
  * @returns {Maybe} A monad containing the value at a given path
  */
 Maybe.prototype.path = function (path) {
-    return this.__isValidPath(path)
-        ? this.props(...path.split(DELIMITER))
-        : Maybe.of(undefined);
+  return isValidPath(path)
+    ? this.props(...path.split(DELIMITER))
+    : Maybe.of(undefined);
 };
 
 /**
@@ -199,11 +208,11 @@ Maybe.prototype.path = function (path) {
  * @returns {Maybe} A monad created from the result of the transformation
  */
 Maybe.prototype.map = function (transform) {
-    if (typeof transform !== 'function') throw new Error('transform must be a function');
-    if (this.isNothing()) {
-        return Maybe.of(undefined);
-    }
-    return Maybe.of(transform(this.join()));
+  if (typeof transform !== 'function') throw new Error('transform must be a function');
+  if (this.isNothing()) {
+    return Maybe.of(undefined);
+  }
+  return Maybe.of(transform(this.join()));
 };
 
 /**
@@ -220,18 +229,7 @@ Maybe.prototype.map = function (transform) {
  * @returns {Maybe} A monad created from the result of the transformation
  */
 Maybe.prototype.chain = function (fn) {
-    return this.map(fn).join();
-};
-
-/**
- * Determine whether a path argument is valid
- * @param path {string}
- * @returns {boolean} &lt;code>true&lt;/code> if the path is valid, &lt;code>false&lt;/code> if not
- * @private
- */
-Maybe.prototype.__isValidPath = function (path) {
-    if (path === null || path === undefined) return false;
-    return typeof path === 'string' &amp;&amp; path.length > 0;
+  return this.map(fn).join();
 };
 
 module.exports = Maybe;
@@ -247,7 +245,7 @@ module.exports = Maybe;
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu May 24 2018 13:28:55 GMT-0400 (Eastern Daylight Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jul 12 2018 15:02:31 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
