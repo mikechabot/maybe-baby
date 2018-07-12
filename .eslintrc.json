@@ -1,6 +1,19 @@
 {
-    "extends": "airbnb-base",
-    "rules": {
-        "no-underscore-dangle": ["error", { "allowAfterThis": true }]
-    }
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true
+  },
+  "extends": "airbnb-base",
+  "plugins": ["chai-friendly"],
+  "rules": {
+    "no-unused-expressions": 0,
+    "chai-friendly/no-unused-expressions": 2,
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allowAfterThis": true
+      }
+    ]
+  }
 }

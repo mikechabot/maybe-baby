@@ -1,8 +1,6 @@
-
-
-const expect = require('chai').expect;
+const { expect } = require('chai');
+const { TEST_TYPES } = require('../common/test-const');
 const Maybe = require('../../lib');
-const TEST_TYPES = require('../common/test-const').TEST_TYPES;
 
 describe('maybe-baby', () => {
   describe('Prototype', () => {
