@@ -30,7 +30,8 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
   - [isJust](#isjust)
   - [isNothing](#isnothing)
   - [join](#join)
-  - [path, prop](#props)
+  - [prop](#prop)
+  - [path](#path)
   - [map](#mapfunc)
   - [chain](#chainfunc)
 - [Credit](#credit)
@@ -192,7 +193,7 @@ obj.prop('foo').prop('bar').prop(1).join();  // 456
 
 ----
 
-#### `path(<string>)`
+### <a id="path">`path(<string>)`</a>
 
 Use `path` to get values at arbitrary depths.
 
