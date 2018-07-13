@@ -30,6 +30,7 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
   - [isJust](#isjust)
   - [isNothing](#isnothing)
   - [join](#join)
+  - [orElse](#orelse)
   - [prop](#prop)
   - [path](#pathStr)
   - [map](#mapfunc)
@@ -173,6 +174,19 @@ Maybe.of(null).join();  // null
 
 ----
 
+### <a id="orelse">`orElse(val)`</a>
+
+Chain to the end of a monad to return as the default value if `isNothing()` is `true`:
+
+```javascript
+Maybe.of(undefined)
+  .orElse('No Value')
+  .join();  // 'No Value'
+```
+
+----
+
+
 ### <a id="prop">`prop(<string|number>)`</a>
 
 Use `prop` to get values at arbitrary depths.
@@ -186,9 +200,18 @@ const obj = Maybe.of({
   } 
 });
 
-obj.prop('foo').join();                      // { bar: [123, 456] }
-obj.prop('foo').prop('bar').join();          // [123, 456]
-obj.prop('foo').prop('bar').prop(1).join();  // 456
+obj.prop("foo").join(); // { bar: [123, 456] }
+
+obj
+  .prop("foo")
+  .prop("bar")
+  .join();  // [123, 456]
+  
+obj
+  .prop("foo")
+  .prop("bar")
+  .prop(1)
+  .join();  // 456
 ```
 
 ----
