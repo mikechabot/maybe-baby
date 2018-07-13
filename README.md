@@ -27,7 +27,9 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 - [Docs](#docs)
 - [API](#api)
   - [of](#of)
-  - [isJust, isNothing](#isjust-isnothing)
+  - [isJust](#isjust)
+  - [isNothing](#isnothing)
+  - [join](#join)
   - [path, prop](#props)
   - [map](#mapfunc)
   - [chain](#chainfunc)
@@ -138,57 +140,74 @@ console.log(mZipCode.join()); // undefined
 ```
 ----
 
-### <a id="isjust-isnothing">`isJust()`, `isNothing()`</a>
+### <a id="isjust">`isJust()`</a>
 
-Use `isNothing` and `isJust` to determine whether the monad is `null` and/or `undefined`
+Returns `true` if the value is not `null` or `undefined`:
 
 ```javascript
-const noVal = Maybe.of(null);
-noVal.isJust();     // false
-noVal.isNothing();  // true
-
-
-const aVal = Maybe.of(123);
-aVal.isJust();     // true
-aVal.isNothing();  // false
+Maybe.of(123).isJust();   // true
+Maybe.of(null).isJust();  // false
 ```
 
 ----
 
-### <a id="props">`path`, `prop`</a>
+### <a id="isnothing">`isNothing()`</a>
 
-Use `path` or `prop` to get values at arbitrary depths.
+Returns `true` if the value is `null` or `undefined`:
 
 ```javascript
-const myObject = { 
+Maybe.of(123).isNothing();   // false
+Maybe.of(null).isNothing();  // true
+```
+----
+
+### <a id="join">`join()`</a>
+
+Returns the value:
+
+```javascript
+Maybe.of(123).join();   // 123
+Maybe.of(null).join();  // null
+```
+
+----
+
+### <a id="prop">`prop(<string|number>)`</a>
+
+Use `prop` to get values at arbitrary depths.
+
+> Accepts a single string argument.
+
+```javascript
+const obj = Maybe.of({ 
   foo: { 
     bar: [123, 456] 
   } 
-};
+});
+
+obj.prop('foo').join();                      // { bar: [123, 456] }
+obj.prop('foo').prop('bar').join();          // [123, 456]
+obj.prop('foo').prop('bar').prop(1).join();  // 456
 ```
 
-#### `prop(<string|number>)`
-
-Accepts a single argument:
-
-```javascript
-const mObj = Maybe.of(myObject);
-
-mObj.prop('foo').join();                       // { bar: [123, 456] }
-mObj.prop('foo').prop('bar').join();           // [123, 456]
-mObj.prop('foo').prop('bar').prop(1).join();   // 456
-```
+----
 
 #### `path(<string>)`
 
-Accepts a period-delimited string:
+Use `path` to get values at arbitrary depths.
+
+> Accepts a period-delimited string.
 
 ```javascript
-const mObj = Maybe.of(myObject);
+const obj = Maybe.of({ 
+  foo: { 
+    bar: [123, 456] 
+  } 
+});
 
-mObj.path('foo').join();        // { bar: [123, 456] }
-mObj.path('foo.bar').join();    // [123, 456]
-mObj.path('foo.bar.1').join();  // 456
+obj.path('foo').join();        // { bar: [123, 456] }
+obj.path('foo.bar').join();    // [123, 456]
+obj.path('foo.bar.1').join();  // 456
 ```
 
 ----
