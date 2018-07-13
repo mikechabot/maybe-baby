@@ -83,8 +83,7 @@ Maybe.prototype.isNothing = function () {
 };
 
 /**
- * Chain to the end of <code>prop</code>, <code>props</code>, or <code>path</code> as the
- * default value to return if the <code>isNothing()</code> is true
+ * Chain to the end of a monad as the default value to return if the <code>isNothing()</code> is true
  * @param defaultValue {string} Return this value when
  * <code>join()</code> is called and <code>isNothing()</code> is true
  * @example const maybe1 = Maybe.of(null);
