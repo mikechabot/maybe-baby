@@ -90,8 +90,17 @@ function getZipCode(user) {
 ```javascript
 import Maybe from 'maybe-baby';
 
+// Use a function getter
 function getZipCode(user) {
   return Maybe.of(() => user.address.zipCode).join();
+}
+
+// Use a prop getters
+function getZipCode(user) {
+  return Maybe.of(user)
+    .prop('address')
+    .prop('zipCode')
+    .join();
 }
 ```
 
