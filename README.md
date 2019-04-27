@@ -95,7 +95,7 @@ function getZipCode(user) {
   return Maybe.of(() => user.address.zipCode).join();
 }
 
-// Use a prop getters
+// Use prop getters
 function getZipCode(user) {
   return Maybe.of(user)
     .prop('address')
