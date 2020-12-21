@@ -9,9 +9,7 @@ pids
 *.seed
 
 # Coverage
-.nyc-coverage/*
-.nyc-coverage-temp/*
-.nyc_output/*
+coverage
 
 
 # Dependency directories

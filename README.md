@@ -1,7 +1,9 @@
 # maybe-baby
 
+> 2.x will be maintained, however, if possible for your repository, you should opt to use TypeScript's [optional chaining](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html), which was introduced in 3.7
+
 <div align="center">
-Minimize defensive coding. A JavaScript implementation of the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad">Maybe monad</a>
+Minimize defensive coding. A JavaScript implementation of the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad">Maybe monad</a>.
 <br /><br />
   <a href="https://www.npmjs.com/package/maybe-baby">
     <img src="https://img.shields.io/npm/v/maybe-baby.svg?style=flat-square" alt="npm version" />
@@ -25,21 +27,21 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 - [Install](#install)
 - [Getting Started](#getting-started)
 - [Docs](#docs)
+- [Migration](#migration)
 - [API](#api)
   - [of](#of)
   - [isJust](#isjust)
   - [isNothing](#isnothing)
   - [join](#join)
   - [orElse](#orelse)
-  - [prop](#prop)
-  - [path](#pathStr)
   - [map](#mapfunc)
   - [chain](#chainfunc)
 - [Credit](#credit)
 
 ## <a id="install">Install</a>
 
-* `$ npm install maybe-baby`
+* `npm install --save maybe-baby`
+* `yarn add maybe-baby`
 
 ---
 
@@ -70,11 +72,11 @@ const zipCode = user.address.zipCode;  // Uncaught TypeError: Cannot read proper
 1. Write some ugly null checks that don't scale well:
 
 ```javascript
-function getZipCode(user) {
+const getZipCode = (user) => {
   if (user !== null && user !== undefined) {
-     if (user.address !== null && user.address !== undefined) {
-      	return user.address.zipCode
-      }
+    if (user.address !== null && user.address !== undefined) {
+      return user.address.zipCode
+    }
   }
 }
 ```
@@ -82,6 +84,8 @@ function getZipCode(user) {
 2. Use [`_.get()`](https://lodash.com/docs/4.17.4#get) or something similar, but these libraries have large footprints, and most likely won't be implementing the monadic structure.
 
 3. Wait for [optional chaining](https://github.com/tc39/proposal-optional-chaining) to be approved in ECMA, or use [babel-plugin-transform-optional-chaining](https://www.npmjs.com/package/babel-plugin-transform-optional-chaining).
+
+4. Use TypeScript's [optional chaining](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html) 
 
 ### A Better Solution?
 
@@ -91,17 +95,8 @@ function getZipCode(user) {
 import Maybe from 'maybe-baby';
 
 // Use a function getter
-function getZipCode(user) {
-  return Maybe.of(() => user.address.zipCode).join();
-}
+const getZipCode = (user) => Maybe.of(() => user.address.zipCode).join();
 
-// Use prop getters
-function getZipCode(user) {
-  return Maybe.of(user)
-    .prop('address')
-    .prop('zipCode')
-    .join();
-}
 ```
 
 Now we can safely get the `zipCode` without worrying about the shape of the object, or encountering `TypeErrors`:
@@ -121,11 +116,75 @@ Documentation generated via [JSDoc](https://github.com/jsdoc3/jsdoc).
 
 ---
 
+## <a id="migration">Migrating from 1.x to 2.x</a>
+
+Breaking changes were introduced in 2.0.0; the following redundant function were removed.
+
+> Maybe.of(<func>) can replicate the behavior of `prop`, `props`, and `path`.
+
+### `prop(val: string | number)`
+
+```javascript
+const obj = Maybe.of({ 
+  foo: { 
+    bar: [123, 456] 
+  } 
+});
+
+// Incorrect
+const bar = obj.prop("foo").join(); // { bar: [123, 456] }
+
+// Correct
+Maybe.of(() => obj.join().foo).join(); // { bar: [123, 456] }
+
+// Incorrect
+obj
+  .prop("foo")
+  .prop("bar")
+  .prop(1)
+  .join(); // 456
+
+// Correct
+Maybe.of(() => obj.join().foo.bar[1]).join() // 456
+```
+
+### `props(...args)`
+
+```javascript
+const obj = Maybe.of({
+  foo: 'bar',
+  baz: [1,2,3]
+});
+
+// Incorrect
+obj.props('baz', 0).join(); // 1
+
+// Correct
+Maybe.of(() => obj.join().baz[0]).join(); // 1
+```
+
+### `props(val: string)`
+
+```javascript
+const obj = Maybe.of({
+  foo: 'bar',
+  baz: [1,2,3]
+});
+
+// Incorrect
+obj.path('baz.0').join() // 1
+
+// Correct
+Maybe.of(() => obj.join().baz[0]).join(); // 1
+```
+
+---
+
 ## <a id="api">API</a>
 
 Check out the API below, or the complete [documentation](https://mikechabot.github.io/maybe-baby/).
 
-### <a id="of">`of(val|func)`</a>
+### <a id="of">`of(val: unknown | OfTypeFunc<T>)`</a>
 
 Accepts a value of any type, and returns a monad:
 
@@ -143,7 +202,9 @@ Accepts a function, and sets the function's return value as the monad's value, r
 
 > If the function results in an error, the monad's value is set to `undefined`.
 
-```javascript
+```typescript
+type OfTypeFunc<T> = () => T;
+
 const user = {};
 const mZipCode = Maybe.of(() => user.address.zipCode);
 
@@ -151,7 +212,7 @@ console.log(mZipCode.join()); // undefined
 ```
 ----
 
-### <a id="isjust">`isJust()`</a>
+### <a id="isjust">`isJust(): boolean`</a>
 
 Returns `true` if the value is not `null` or `undefined`:
 
@@ -162,7 +223,7 @@ Maybe.of(null).isJust();  // false
 
 ----
 
-### <a id="isnothing">`isNothing()`</a>
+### <a id="isnothing">`isNothing(): boolean`</a>
 
 Returns `true` if the value is `null` or `undefined`:
 
@@ -172,7 +233,7 @@ Maybe.of(null).isNothing();  // true
 ```
 ----
 
-### <a id="join">`join()`</a>
+### <a id="join">`join(): T`</a>
 
 Returns the value:
 
@@ -183,7 +244,7 @@ Maybe.of(null).join();  // null
 
 ----
 
-### <a id="orelse">`orElse(val)`</a>
+### <a id="orelse">`orElse(defaultValue: unknown): Maybe`</a>
 
 Chain to the end of a monad to return as the default value if `isNothing()` is `true`:
 
@@ -195,57 +256,7 @@ Maybe.of(undefined)
 
 ----
 
-
-### <a id="prop">`prop(<string|number>)`</a>
-
-Use `prop` to get values at arbitrary depths.
-
-> Accepts a single string argument.
-
-```javascript
-const obj = Maybe.of({ 
-  foo: { 
-    bar: [123, 456] 
-  } 
-});
-
-obj.prop("foo").join(); // { bar: [123, 456] }
-
-obj
-  .prop("foo")
-  .prop("bar")
-  .join();  // [123, 456]
-  
-obj
-  .prop("foo")
-  .prop("bar")
-  .prop(1)
-  .join();  // 456
-```
-
-----
-
-### <a id="pathStr">`path(<string>)`</a>
-
-Use `path` to get values at arbitrary depths.
-
-> Accepts a period-delimited string.
-
-```javascript
-const obj = Maybe.of({ 
-  foo: { 
-    bar: [123, 456] 
-  } 
-});
-
-obj.path('foo').join();        // { bar: [123, 456] }
-obj.path('foo.bar').join();    // [123, 456]
-obj.path('foo.bar.1').join();  // 456
-```
-
-----
-
-### <a id="mapfunc">`map(func)`</a>
+### <a id="mapfunc">`map(transform: (val: T) => T | Maybe<T>): Maybe`</a>
 
 Apply a transformation to the monad, and return a new monad:
 
@@ -258,7 +269,7 @@ newVal.join(); // 2;
 
 ----
 
-### <a id="chainfunc">`chain(func)`</a>
+### <a id="chainfunc">`chain(chain: (val: T) => Maybe<T>): Maybe`</a>
 
 Chain together functions that return Maybe monads:
 
