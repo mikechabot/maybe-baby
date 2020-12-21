@@ -5,6 +5,7 @@
   "author": "Mike Chabot",
   "license": "MIT",
   "main": "index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib",
     "src"
