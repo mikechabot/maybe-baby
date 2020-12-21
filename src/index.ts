@@ -1,3 +1,5 @@
+export type OfTypeFunc<T> = () => T;
+
 class Maybe<T = unknown> {
   private readonly __value: T;
 
@@ -21,7 +23,7 @@ class Maybe<T = unknown> {
    * const maybe2 = Maybe.of(() => exampleObj.baz.1);
    * @returns {Maybe} A Maybe monad
    */
-  static of(val: unknown): Maybe {
+  static of<T>(val: unknown | OfTypeFunc<T>): Maybe {
     try {
       return new Maybe(typeof val === 'function' ? val() : val);
     } catch (error) {
@@ -38,7 +40,7 @@ class Maybe<T = unknown> {
    * maybe2.join();   // null
    * @returns {*} Returns the value of the monad
    */
-  join() {
+  join(): T {
     return this.__value;
   }
 
@@ -52,7 +54,7 @@ class Maybe<T = unknown> {
    * @returns {boolean} <code>true</code> if the value is defined,
    * <code>false</code> if the monad is null or undefined.
    */
-  isJust() {
+  isJust(): boolean {
     return !this.isNothing();
   }
 
@@ -66,7 +68,7 @@ class Maybe<T = unknown> {
    * @returns {boolean} <code>true</code> if the value is null or
    * undefined, <code>false</code> if the value is defined.
    */
-  isNothing() {
+  isNothing(): boolean {
     return this.__value === null || this.__value === undefined;
   }
 
@@ -80,7 +82,7 @@ class Maybe<T = unknown> {
    * maybe1.join();   // 'N/A'
    * @returns {Maybe} A monad containing the default value
    */
-  orElse(defaultValue: unknown) {
+  orElse(defaultValue: unknown): Maybe {
     if (this.isNothing()) {
       return Maybe.of(defaultValue);
     }
@@ -93,7 +95,7 @@ class Maybe<T = unknown> {
    * @example Maybe.of(1).map(val => val + 1);
    * @returns {Maybe} A monad created from the result of the transformation
    */
-  map(transform: (val: T) => T | Maybe): Maybe {
+  map(transform: (val: T) => T | Maybe<T>): Maybe {
     if (typeof transform !== 'function') throw new Error('transform must be a function');
     if (this.isNothing()) {
       return Maybe.of(undefined);
@@ -114,9 +116,9 @@ class Maybe<T = unknown> {
    *  .join();
    * @returns {Maybe} A monad created from the result of the transformation
    */
-  chain(chain: (val: T) => Maybe) {
+  chain(chain: (val: T) => Maybe<T>): Maybe {
     if (typeof chain !== 'function') throw new Error('chain must be a function');
-    return this.map(chain).join();
+    return this.map(chain).join() as Maybe
   }
 }
 

@@ -88,6 +88,37 @@ describe('maybe-baby', () => {
           expect(testMaybe.join()).toEqual(testValue);
         });
       });
+
+      it('should return replicate 1.x prop getter', () => {
+        const bar = {
+          bar: [123, 456]
+        };
+
+        const obj = Maybe.of({
+          foo: bar
+        });
+
+        expect(Maybe.of(() => obj.join().foo).join()).toEqual(bar);
+        expect(Maybe.of(() => obj.join().foo.bar[1]).join()).toEqual(456);
+      });
+
+      it('should return replicate 1.x props getter', () => {
+        const obj = Maybe.of({
+          foo: 'bar',
+          baz: [1,2,3]
+        });
+
+        expect(Maybe.of(() => obj.join().baz[0]).join()).toEqual(1);
+      });
+
+      it('should return replicate 1.x path getter', () => {
+        const obj = Maybe.of({
+          foo: 'bar',
+          baz: [1,2,3]
+        });
+
+        expect(Maybe.of(() => obj.join().baz[0]).join()).toEqual(1);
+      });
     });
 
     describe('isJust()', () => {

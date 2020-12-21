@@ -1,3 +1,4 @@
+export declare type OfTypeFunc<T> = () => T;
 declare class Maybe<T = unknown> {
     private readonly __value;
     /**
@@ -17,7 +18,7 @@ declare class Maybe<T = unknown> {
      * const maybe2 = Maybe.of(() => exampleObj.baz.1);
      * @returns {Maybe} A Maybe monad
      */
-    static of(val: unknown): Maybe;
+    static of<T>(val: unknown | OfTypeFunc<T>): Maybe;
     /**
      * Get the monad's value
      * @example const maybe1 = Maybe.of(123);
@@ -60,14 +61,14 @@ declare class Maybe<T = unknown> {
      * maybe1.join();   // 'N/A'
      * @returns {Maybe} A monad containing the default value
      */
-    orElse(defaultValue: unknown): Maybe<unknown>;
+    orElse(defaultValue: unknown): Maybe;
     /**
      * Apply a transformation to the monad
      * @param transform {function} The transformation function to apply to the monad
      * @example Maybe.of(1).map(val => val + 1);
      * @returns {Maybe} A monad created from the result of the transformation
      */
-    map(transform: (val: T) => T | Maybe): Maybe;
+    map(transform: (val: T) => T | Maybe<T>): Maybe;
     /**
      * Chain together functions that return Maybe monads
      * @param chain {function} Function that is passed the value of the calling monad, and returns a monad.
@@ -81,6 +82,6 @@ declare class Maybe<T = unknown> {
      *  .join();
      * @returns {Maybe} A monad created from the result of the transformation
      */
-    chain(chain: (val: T) => Maybe): unknown;
+    chain(chain: (val: T) => Maybe<T>): Maybe;
 }
 export default Maybe;

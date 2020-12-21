@@ -8,7 +8,7 @@
   "types": "./lib/index.d.ts",
   "files": [
     "lib",
-    "src"
+    "src/index.ts"
   ],
   "scripts": {
     "build": "babel src -d lib --extensions .ts",
