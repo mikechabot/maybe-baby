@@ -31,8 +31,6 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
   - [isNothing](#isnothing)
   - [join](#join)
   - [orElse](#orelse)
-  - [prop](#prop)
-  - [path](#pathStr)
   - [map](#mapfunc)
   - [chain](#chainfunc)
 - [Credit](#credit)
@@ -91,17 +89,8 @@ function getZipCode(user) {
 import Maybe from 'maybe-baby';
 
 // Use a function getter
-function getZipCode(user) {
-  return Maybe.of(() => user.address.zipCode).join();
-}
+const getZipCode = (user) => Maybe.of(() => user.address.zipCode).join();
 
-// Use prop getters
-function getZipCode(user) {
-  return Maybe.of(user)
-    .prop('address')
-    .prop('zipCode')
-    .join();
-}
 ```
 
 Now we can safely get the `zipCode` without worrying about the shape of the object, or encountering `TypeErrors`:
@@ -191,56 +180,6 @@ Chain to the end of a monad to return as the default value if `isNothing()` is `
 Maybe.of(undefined)
   .orElse('No Value')
   .join();  // 'No Value'
-```
-
-----
-
-
-### <a id="prop">`prop(<string|number>)`</a>
-
-Use `prop` to get values at arbitrary depths.
-
-> Accepts a single string argument.
-
-```javascript
-const obj = Maybe.of({ 
-  foo: { 
-    bar: [123, 456] 
-  } 
-});
-
-obj.prop("foo").join(); // { bar: [123, 456] }
-
-obj
-  .prop("foo")
-  .prop("bar")
-  .join();  // [123, 456]
-  
-obj
-  .prop("foo")
-  .prop("bar")
-  .prop(1)
-  .join();  // 456
-```
-
-----
-
-### <a id="pathStr">`path(<string>)`</a>
-
-Use `path` to get values at arbitrary depths.
-
-> Accepts a period-delimited string.
-
-```javascript
-const obj = Maybe.of({ 
-  foo: { 
-    bar: [123, 456] 
-  } 
-});
-
-obj.path('foo').join();        // { bar: [123, 456] }
-obj.path('foo.bar').join();    // [123, 456]
-obj.path('foo.bar.1').join();  // 456
 ```
 
 ----

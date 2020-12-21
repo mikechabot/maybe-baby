@@ -1,8 +1,8 @@
 {
-  "plugins": ["plugins/markdown"],
+  "plugins": ["plugins/markdown", "node_modules/better-docs/typescript"],
   "recurseDepth": 10,
   "source": {
-    "includePattern": ".js$",
+    "includePattern": "\\.(js|ts)$",
     "excludePattern": "(node_modules/|docs)"
   },
   "readme": "./README.md",
