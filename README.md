@@ -40,7 +40,8 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 
 ## <a id="install">Install</a>
 
-* `$ npm install maybe-baby`
+* `npm install --save maybe-baby`
+* `yarn add maybe-baby`
 
 ---
 
