@@ -49,8 +49,11 @@
 
     <section class="readme">
         <article><h1>maybe-baby</h1>
+<blockquote>
+<p>2.x will be maintained, however, if possible for your repository, you should opt to use TypeScript's <a href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html">optional chaining</a>, which was introduced in 3.7</p>
+</blockquote>
 <div align="center">
-Minimize defensive coding. A JavaScript implementation of the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad">Maybe monad</a>
+Minimize defensive coding. A JavaScript implementation of the <a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)#The_Maybe_monad">Maybe monad</a>.
 <br /><br />
   <a href="https://www.npmjs.com/package/maybe-baby">
     <img src="https://img.shields.io/npm/v/maybe-baby.svg?style=flat-square" alt="npm version" />
@@ -73,6 +76,7 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 <li><a href="#install">Install</a></li>
 <li><a href="#getting-started">Getting Started</a></li>
 <li><a href="#docs">Docs</a></li>
+<li><a href="#migration">Migration</a></li>
 <li><a href="#api">API</a>
 <ul>
 <li><a href="#of">of</a></li>
@@ -110,11 +114,11 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 <ol>
 <li>Write some ugly null checks that don't scale well:</li>
 </ol>
-<pre class="prettyprint source lang-javascript"><code>function getZipCode(user) {
+<pre class="prettyprint source lang-javascript"><code>const getZipCode = (user) => {
   if (user !== null && user !== undefined) {
-     if (user.address !== null && user.address !== undefined) {
-      	return user.address.zipCode
-      }
+    if (user.address !== null && user.address !== undefined) {
+      return user.address.zipCode
+    }
   }
 }
 </code></pre>
@@ -124,6 +128,9 @@ Minimize defensive coding. A JavaScript implementation of the <a href="https://e
 </li>
 <li>
 <p>Wait for <a href="https://github.com/tc39/proposal-optional-chaining">optional chaining</a> to be approved in ECMA, or use <a href="https://www.npmjs.com/package/babel-plugin-transform-optional-chaining">babel-plugin-transform-optional-chaining</a>.</p>
+</li>
+<li>
+<p>Use TypeScript's <a href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html">optional chaining</a></p>
 </li>
 </ol>
 <h3>A Better Solution?</h3>
@@ -147,9 +154,62 @@ console.log(zipCode);  // undefined
 <li><a href="https://mikechabot.github.io/maybe-baby/">https://mikechabot.github.io/maybe-baby/</a></li>
 </ul>
 <hr>
+<h2><a id="migration">Migrating from 1.x to 2.x</a></h2>
+<p>Breaking changes were introduced in 2.0.0; the following redundant function were removed.</p>
+<blockquote>
+<p>Maybe.of(<func>) can replicate the behavior of <code>prop</code>, <code>props</code>, and <code>path</code>.</p>
+</blockquote>
+<h3><code>prop(val: string | number)</code></h3>
+<pre class="prettyprint source lang-javascript"><code>const obj = Maybe.of({ 
+  foo: { 
+    bar: [123, 456] 
+  } 
+});
+
+// Incorrect
+const bar = obj.prop(&quot;foo&quot;).join(); // { bar: [123, 456] }
+
+// Correct
+Maybe.of(() => obj.join().foo).join(); // { bar: [123, 456] }
+
+// Incorrect
+obj
+  .prop(&quot;foo&quot;)
+  .prop(&quot;bar&quot;)
+  .prop(1)
+  .join(); // 456
+
+// Correct
+Maybe.of(() => obj.join().foo.bar[1]).join() // 456
+</code></pre>
+<h3><code>props(...args)</code></h3>
+<pre class="prettyprint source lang-javascript"><code>const obj = Maybe.of({
+  foo: 'bar',
+  baz: [1,2,3]
+});
+
+// Incorrect
+obj.props('baz', 0).join(); // 1
+
+// Correct
+Maybe.of(() => obj.join().baz[0]).join(); // 1
+</code></pre>
+<h3><code>props(val: string)</code></h3>
+<pre class="prettyprint source lang-javascript"><code>const obj = Maybe.of({
+  foo: 'bar',
+  baz: [1,2,3]
+});
+
+// Incorrect
+obj.path('baz.0').join() // 1
+
+// Correct
+Maybe.of(() => obj.join().baz[0]).join(); // 1
+</code></pre>
+<hr>
 <h2><a id="api">API</a></h2>
 <p>Check out the API below, or the complete <a href="https://mikechabot.github.io/maybe-baby/">documentation</a>.</p>
-<h3><a id="of"><code>of(val|func)</code></a></h3>
+<h3><a id="of"><code>of(val: unknown | OfTypeFunc&lt;T&gt;)</code></a></h3>
 <p>Accepts a value of any type, and returns a monad:</p>
 <pre class="prettyprint source lang-javascript"><code>const str = Maybe.of('foo');
 const num = Maybe.of(123);
@@ -163,38 +223,40 @@ const undef = Maybe.of(undefined);
 <blockquote>
 <p>If the function results in an error, the monad's value is set to <code>undefined</code>.</p>
 </blockquote>
-<pre class="prettyprint source lang-javascript"><code>const user = {};
+<pre class="prettyprint source lang-typescript"><code>type OfTypeFunc&lt;T> = () => T;
+
+const user = {};
 const mZipCode = Maybe.of(() => user.address.zipCode);
 
 console.log(mZipCode.join()); // undefined
 </code></pre>
 <hr>
-<h3><a id="isjust"><code>isJust()</code></a></h3>
+<h3><a id="isjust"><code>isJust(): boolean</code></a></h3>
 <p>Returns <code>true</code> if the value is not <code>null</code> or <code>undefined</code>:</p>
 <pre class="prettyprint source lang-javascript"><code>Maybe.of(123).isJust();   // true
 Maybe.of(null).isJust();  // false
 </code></pre>
 <hr>
-<h3><a id="isnothing"><code>isNothing()</code></a></h3>
+<h3><a id="isnothing"><code>isNothing(): boolean</code></a></h3>
 <p>Returns <code>true</code> if the value is <code>null</code> or <code>undefined</code>:</p>
 <pre class="prettyprint source lang-javascript"><code>Maybe.of(123).isNothing();   // false
 Maybe.of(null).isNothing();  // true
 </code></pre>
 <hr>
-<h3><a id="join"><code>join()</code></a></h3>
+<h3><a id="join"><code>join(): T</code></a></h3>
 <p>Returns the value:</p>
 <pre class="prettyprint source lang-javascript"><code>Maybe.of(123).join();   // 123
 Maybe.of(null).join();  // null
 </code></pre>
 <hr>
-<h3><a id="orelse"><code>orElse(val)</code></a></h3>
+<h3><a id="orelse"><code>orElse(defaultValue: unknown): Maybe</code></a></h3>
 <p>Chain to the end of a monad to return as the default value if <code>isNothing()</code> is <code>true</code>:</p>
 <pre class="prettyprint source lang-javascript"><code>Maybe.of(undefined)
   .orElse('No Value')
   .join();  // 'No Value'
 </code></pre>
 <hr>
-<h3><a id="mapfunc"><code>map(func)</code></a></h3>
+<h3><a id="mapfunc"><code>map(transform: (val: T) =&gt; T | Maybe&lt;T&gt;): Maybe</code></a></h3>
 <p>Apply a transformation to the monad, and return a new monad:</p>
 <pre class="prettyprint source lang-javascript"><code>const val = 1;
 const newVal = Maybe.of(val).map(val => val + 1);
@@ -202,7 +264,7 @@ const newVal = Maybe.of(val).map(val => val + 1);
 newVal.join(); // 2;
 </code></pre>
 <hr>
-<h3><a id="chainfunc"><code>chain(func)</code></a></h3>
+<h3><a id="chainfunc"><code>chain(chain: (val: T) =&gt; Maybe&lt;T&gt;): Maybe</code></a></h3>
 <p>Chain together functions that return Maybe monads:</p>
 <pre class="prettyprint source lang-javascript"><code>function addOne (val) {
   return Maybe.of(val + 1);
@@ -229,7 +291,7 @@ const three = Maybe.of(1)
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Mon Dec 21 2020 01:08:57 GMT-0500 (Eastern Standard Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Mon Dec 21 2020 02:16:55 GMT-0500 (Eastern Standard Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
