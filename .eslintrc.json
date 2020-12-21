@@ -1,12 +1,11 @@
 {
   "env": {
     "browser": true,
-    "node": true,
-    "mocha": true
+    "node": true
   },
   "parser": "@typescript-eslint/parser",
   "extends": "airbnb-base",
-  "plugins": ["chai-friendly", "@typescript-eslint"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "indent": ["error", 2],
     "no-unused-expressions": 0,
